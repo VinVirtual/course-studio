@@ -1,0 +1,424 @@
+{
+  "version": 1,
+  "sources": [
+    "../voice-lines.json"
+  ],
+  "voice": "af_heart",
+  "speed": 0.96,
+  "lang": "en-us",
+  "bitrate": 32,
+  "notice": "Computer-generated voice (Kokoro text-to-speech).",
+  "count": 51,
+  "totalBytes": 1006560,
+  "totalSeconds": 251.64,
+  "lines": {
+    "215a310c81": {
+      "file": "215a310c81.mp3",
+      "seconds": 7.97,
+      "bytes": 31872,
+      "take": "1daa578098",
+      "level": 0.0773,
+      "text": "Every raindrop starts as water on the ground. To fall from the sky, it first has to get up there, and it makes the trip as a gas."
+    },
+    "4ef5e27615": {
+      "file": "4ef5e27615.mp3",
+      "seconds": 1.51,
+      "bytes": 6048,
+      "take": "f30f546a2c",
+      "level": 0.077,
+      "text": "Liquid becomes vapour"
+    },
+    "6c3388028f": {
+      "file": "6c3388028f.mp3",
+      "seconds": 9.24,
+      "bytes": 36960,
+      "take": "a324726ea6",
+      "level": 0.0767,
+      "text": "Evaporation is the change from liquid water into water vapour, a gas. It happens when heat breaks the bonds that hold water molecules together."
+    },
+    "af664a5a77": {
+      "file": "af664a5a77.mp3",
+      "seconds": 7.22,
+      "bytes": 28896,
+      "take": "897fe7f68e",
+      "level": 0.0756,
+      "text": "The vapour mixes into the air and cannot be seen. The water has not gone anywhere: it is now part of the air around us."
+    },
+    "542c866d1b": {
+      "file": "542c866d1b.mp3",
+      "seconds": 1.39,
+      "bytes": 5568,
+      "take": "6b67747732",
+      "level": 0.0814,
+      "text": "Where the vapour comes from"
+    },
+    "4a8abc386c": {
+      "file": "4a8abc386c.mp3",
+      "seconds": 7.15,
+      "bytes": 28608,
+      "take": "aecd341483",
+      "level": 0.0742,
+      "text": "About 90 percent of the moisture in the air came from water evaporating from oceans, seas, lakes and rivers."
+    },
+    "664b232a6c": {
+      "file": "664b232a6c.mp3",
+      "seconds": 6.38,
+      "bytes": 25536,
+      "take": "1a8cf1e683",
+      "level": 0.0745,
+      "text": "Oceans cover more than 70 percent of Earth's surface, which is why so much of that moisture comes from them."
+    },
+    "c25167c468": {
+      "file": "c25167c468.mp3",
+      "seconds": 6.41,
+      "bytes": 25632,
+      "take": "69c415a87f",
+      "level": 0.0768,
+      "text": "Heat turns water into vapour, the vapour is carried up into a cloud, and the cloud can rain on the land."
+    },
+    "90221089b5": {
+      "file": "90221089b5.mp3",
+      "seconds": 11.9,
+      "bytes": 47616,
+      "take": "c3d73acbcc",
+      "level": 0.0757,
+      "text": "The next lesson follows this vapour as it rises, cools and turns back into liquid by condensation. That is how a cloud is made. You can read ahead in the glossary or go to lesson 2."
+    },
+    "c7d0b24423": {
+      "file": "c7d0b24423.mp3",
+      "seconds": 2.04,
+      "bytes": 8160,
+      "take": "523201283a",
+      "level": 0.0768,
+      "text": "Rain starts as water on the ground."
+    },
+    "30e2991736": {
+      "file": "30e2991736.mp3",
+      "seconds": 3.29,
+      "bytes": 13152,
+      "take": "a64742a94d",
+      "level": 0.0785,
+      "text": "Heat turns it into water vapour, a gas you cannot see."
+    },
+    "cd86c1f53e": {
+      "file": "cd86c1f53e.mp3",
+      "seconds": 3.96,
+      "bytes": 15840,
+      "take": "856dd40f55",
+      "level": 0.0761,
+      "text": "Most of that vapour comes from oceans, seas, lakes and rivers."
+    },
+    "91a8d35a93": {
+      "file": "91a8d35a93.mp3",
+      "seconds": 9,
+      "bytes": 36000,
+      "take": "c032faf6aa",
+      "level": 0.0749,
+      "text": "The vapour from the last lesson does not stay a gas for ever. High in the sky it turns back into liquid water, and that is what a cloud is made of."
+    },
+    "f6df490910": {
+      "file": "f6df490910.mp3",
+      "seconds": 1.32,
+      "bytes": 5280,
+      "take": "c750004b27",
+      "level": 0.0842,
+      "text": "Rising air cools"
+    },
+    "a3badc7d8f": {
+      "file": "a3badc7d8f.mp3",
+      "seconds": 9.22,
+      "bytes": 36864,
+      "take": "053deba7a6",
+      "level": 0.0744,
+      "text": "Clouds form because air containing water vapour rises and cools. As the air rises it is under less pressure, so it spreads out and gets cooler."
+    },
+    "15984e3018": {
+      "file": "15984e3018.mp3",
+      "seconds": 1.39,
+      "bytes": 5568,
+      "take": "f5cd6b7c2f",
+      "level": 0.0798,
+      "text": "Cooling to the dew point"
+    },
+    "b7238b755f": {
+      "file": "b7238b755f.mp3",
+      "seconds": 5.62,
+      "bytes": 22464,
+      "take": "67d6848f76",
+      "level": 0.0763,
+      "text": "Clouds form when the air cools below the dew point, and water vapour condenses to liquid water."
+    },
+    "52f2eaa167": {
+      "file": "52f2eaa167.mp3",
+      "seconds": 6.72,
+      "bytes": 26880,
+      "take": "fc0c37137e",
+      "level": 0.0771,
+      "text": "Condensation is the change from water vapour back into liquid water. It is the opposite of evaporation."
+    },
+    "b301d1afe": {
+      "file": "b301d1afe.mp3",
+      "seconds": 1.15,
+      "bytes": 4608,
+      "take": "9d682d9125",
+      "level": 0.079,
+      "text": "Try it at home"
+    },
+    "b2efdeee85": {
+      "file": "b2efdeee85.mp3",
+      "seconds": 8.66,
+      "bytes": 34656,
+      "take": "444502129c",
+      "level": 0.0773,
+      "text": "On a humid day, a glass of iced water collects drops on its outside. The air touching the cold glass cools, and its vapour condenses."
+    },
+    "dc3c25551a": {
+      "file": "dc3c25551a.mp3",
+      "seconds": 1.7,
+      "bytes": 6816,
+      "take": "536509af31",
+      "level": 0.0794,
+      "text": "Every droplet needs a seed"
+    },
+    "72702985a1": {
+      "file": "72702985a1.mp3",
+      "seconds": 10.8,
+      "bytes": 43200,
+      "take": "2f1e313fb8",
+      "level": 0.0786,
+      "text": "Vapour condenses more easily when it has a particle to settle on. Tiny bits of dust, salt, smoke and pollen do this job, and they are called condensation nuclei."
+    },
+    "767c143768": {
+      "file": "767c143768.mp3",
+      "seconds": 6.94,
+      "bytes": 27744,
+      "take": "f33bc0897f",
+      "level": 0.0769,
+      "text": "Cloud droplets vary a lot in size, from 10 microns, which are millionths of a metre, up to 1 millimetre."
+    },
+    "95a4ca1218": {
+      "file": "95a4ca1218.mp3",
+      "seconds": 1.63,
+      "bytes": 6528,
+      "take": "4d3372de2f",
+      "level": 0.0766,
+      "text": "Follow one parcel of air"
+    },
+    "2aa8bebb2b": {
+      "file": "2aa8bebb2b.mp3",
+      "seconds": 2.54,
+      "bytes": 10176,
+      "take": "2dfab1d542",
+      "level": 0.077,
+      "text": "Warm, damp air near the sea starts to rise."
+    },
+    "c32c7be943": {
+      "file": "c32c7be943.mp3",
+      "seconds": 3.62,
+      "bytes": 14496,
+      "take": "7579f06b5a",
+      "level": 0.0753,
+      "text": "Higher up there is less pressure, so the air spreads out and cools."
+    },
+    "5e6f8fab1d": {
+      "file": "5e6f8fab1d.mp3",
+      "seconds": 1.82,
+      "bytes": 7296,
+      "take": "fa86096534",
+      "level": 0.0769,
+      "text": "It cools below its dew point."
+    },
+    "f59f67fe30": {
+      "file": "f59f67fe30.mp3",
+      "seconds": 2.95,
+      "bytes": 11808,
+      "take": "8169348247",
+      "level": 0.0737,
+      "text": "Its vapour condenses on specks of dust and salt."
+    },
+    "c991136129": {
+      "file": "c991136129.mp3",
+      "seconds": 2.54,
+      "bytes": 10176,
+      "take": "d688655340",
+      "level": 0.0794,
+      "text": "Together, the tiny droplets make a cloud."
+    },
+    "551889a465": {
+      "file": "551889a465.mp3",
+      "seconds": 6.84,
+      "bytes": 27360,
+      "take": "efbad3c87c",
+      "level": 0.075,
+      "text": "A rising parcel of air spreads out and cools. Past its dew point, the vapour condenses into droplets."
+    },
+    "8494c3ca26": {
+      "file": "8494c3ca26.mp3",
+      "seconds": 2.57,
+      "bytes": 10272,
+      "take": "cee9e4c63d",
+      "level": 0.0753,
+      "text": "Damp air rises, spreads out and cools."
+    },
+    "e47edd8038": {
+      "file": "e47edd8038.mp3",
+      "seconds": 3.38,
+      "bytes": 13536,
+      "take": "fa85eb2c4f",
+      "level": 0.078,
+      "text": "Once it cools below the dew point, its vapour condenses."
+    },
+    "293d02f15d": {
+      "file": "293d02f15d.mp3",
+      "seconds": 5.93,
+      "bytes": 23712,
+      "take": "b802248374",
+      "level": 0.0792,
+      "text": "Each droplet forms on a speck of dust, salt, smoke or pollen, and together they make a cloud."
+    },
+    "a1789a606a": {
+      "file": "a1789a606a.mp3",
+      "seconds": 7.46,
+      "bytes": 29856,
+      "take": "ea502a4c81",
+      "level": 0.0766,
+      "text": "Rain is one kind of precipitation: water released from clouds as rain, freezing rain, sleet, snow or hail."
+    },
+    "3d18e47262": {
+      "file": "3d18e47262.mp3",
+      "seconds": 6,
+      "bytes": 24000,
+      "take": "0491d1fe79",
+      "level": 0.0749,
+      "text": "The droplets in a cloud are far too small to fall as rain. To reach the ground, they have to grow."
+    },
+    "3fbb517ae": {
+      "file": "3fbb517ae.mp3",
+      "seconds": 1.2,
+      "bytes": 4800,
+      "take": "8dd86e5625",
+      "level": 0.0888,
+      "text": "Droplets merge"
+    },
+    "1167039f8e": {
+      "file": "1167039f8e.mp3",
+      "seconds": 8.4,
+      "bytes": 33600,
+      "take": "c9a093e1a5",
+      "level": 0.079,
+      "text": "Droplets bump into each other and join together, which is called coalescence. Millions of cloud droplets are needed to make a single raindrop."
+    },
+    "3542c4995f": {
+      "file": "3542c4995f.mp3",
+      "seconds": 6,
+      "bytes": 24000,
+      "take": "9712b2bb76",
+      "level": 0.0756,
+      "text": "A drop leaves the cloud once it falls faster than the updraft, the rising air inside the cloud."
+    },
+    "e8d8b6a2d": {
+      "file": "e8d8b6a2d.mp3",
+      "seconds": 1.13,
+      "bytes": 4512,
+      "take": "70b096ce24",
+      "level": 0.0819,
+      "text": "The ice route"
+    },
+    "42feb8f783": {
+      "file": "42feb8f783.mp3",
+      "seconds": 8.3,
+      "bytes": 33216,
+      "take": "df0e01c99a",
+      "level": 0.0757,
+      "text": "When a cloud holds ice crystals, the crystals can grow quickly by taking water from the cloud. This is called the Bergeron process."
+    },
+    "87dd9a6c48": {
+      "file": "87dd9a6c48.mp3",
+      "seconds": 4.49,
+      "bytes": 17952,
+      "take": "ddb0aaa05f",
+      "level": 0.073,
+      "text": "The crystals may fall as snow, or melt on the way down and fall as rain."
+    },
+    "a59c9c5017": {
+      "file": "a59c9c5017.mp3",
+      "seconds": 1.44,
+      "bytes": 5760,
+      "take": "97908fdc2e",
+      "level": 0.0759,
+      "text": "The shape of a raindrop"
+    },
+    "d5831a626e": {
+      "file": "d5831a626e.mp3",
+      "seconds": 7.01,
+      "bytes": 28032,
+      "take": "014f730e85",
+      "level": 0.0769,
+      "text": "Raindrops are not shaped like teardrops. Small drops, with a radius under 1 millimetre, are round like a ball."
+    },
+    "6d5ded5d5c": {
+      "file": "6d5ded5d5c.mp3",
+      "seconds": 5.81,
+      "bytes": 23232,
+      "take": "12d9bcc773",
+      "level": 0.0769,
+      "text": "At about 2 to 3 millimetres across, a falling drop is flat underneath, like a hamburger bun."
+    },
+    "0ad191a957": {
+      "file": "0ad191a957.mp3",
+      "seconds": 5.38,
+      "bytes": 21504,
+      "take": "b3f222ab6e",
+      "level": 0.0762,
+      "text": "At about 4 to 5 millimetres, the dip in its bottom grows into a shape like a parachute."
+    },
+    "0425ba9834": {
+      "file": "0425ba9834.mp3",
+      "seconds": 3.19,
+      "bytes": 12768,
+      "take": "5cfaa4b44b",
+      "level": 0.077,
+      "text": "Bigger still, the drop breaks up into smaller drops."
+    },
+    "d3aa60a65a": {
+      "file": "d3aa60a65a.mp3",
+      "seconds": 5.69,
+      "bytes": 22752,
+      "take": "162aa3fa71",
+      "level": 0.0765,
+      "text": "As a falling drop grows, air pushes its bottom flat, then hollows it out, until it splits."
+    },
+    "693ab32c3b": {
+      "file": "693ab32c3b.mp3",
+      "seconds": 3.43,
+      "bytes": 13728,
+      "take": "10fdc0e052",
+      "level": 0.0762,
+      "text": "Cloud droplets are too small to fall, so they have to grow."
+    },
+    "43ade61d33": {
+      "file": "43ade61d33.mp3",
+      "seconds": 2.95,
+      "bytes": 11808,
+      "take": "facf29074a",
+      "level": 0.0762,
+      "text": "They merge, and millions of them make one raindrop."
+    },
+    "9d97615746": {
+      "file": "9d97615746.mp3",
+      "seconds": 5.02,
+      "bytes": 20064,
+      "take": "4d458a695d",
+      "level": 0.0745,
+      "text": "In icy clouds, crystals grow fast and fall as snow, or melt into rain."
+    },
+    "781630a640": {
+      "file": "781630a640.mp3",
+      "seconds": 3.91,
+      "bytes": 15648,
+      "take": "e9bb93fa57",
+      "level": 0.08,
+      "text": "Small raindrops are round, and big ones flatten and break apart."
+    }
+  }
+}

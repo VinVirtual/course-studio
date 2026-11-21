@@ -1,0 +1,8 @@
+{
+  "source": "voice-lines.json",
+  "out": "voice",
+  "voice": "af_heart",
+  "speed": 0.96,
+  "bitrate": 32,
+  "say": {}
+}

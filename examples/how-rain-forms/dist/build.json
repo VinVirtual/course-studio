@@ -1,0 +1,266 @@
+{
+ "generator": "course-studio",
+ "course": "how-rain-forms",
+ "lessons": [
+  "water-into-air",
+  "clouds",
+  "raindrops"
+ ],
+ "lines": [
+  {
+   "lesson": "water-into-air",
+   "key": "215a310c81",
+   "text": "Every raindrop starts as water on the ground. To fall from the sky, it first has to get up there, and it makes the trip as a gas."
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "4ef5e27615",
+   "text": "Liquid becomes vapour"
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "6c3388028f",
+   "text": "Evaporation is the change from liquid water into water vapour, a gas. It happens when heat breaks the bonds that hold water molecules together."
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "af664a5a77",
+   "text": "The vapour mixes into the air and cannot be seen. The water has not gone anywhere: it is now part of the air around us."
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "542c866d1b",
+   "text": "Where the vapour comes from"
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "4a8abc386c",
+   "text": "About 90 percent of the moisture in the air came from water evaporating from oceans, seas, lakes and rivers."
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "664b232a6c",
+   "text": "Oceans cover more than 70 percent of Earth's surface, which is why so much of that moisture comes from them."
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "c25167c468",
+   "text": "Heat turns water into vapour, the vapour is carried up into a cloud, and the cloud can rain on the land."
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "90221089b5",
+   "text": "The next lesson follows this vapour as it rises, cools and turns back into liquid by condensation. That is how a cloud is made. You can read ahead in the glossary or go to lesson 2."
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "c7d0b24423",
+   "text": "Rain starts as water on the ground."
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "30e2991736",
+   "text": "Heat turns it into water vapour, a gas you cannot see."
+  },
+  {
+   "lesson": "water-into-air",
+   "key": "cd86c1f53e",
+   "text": "Most of that vapour comes from oceans, seas, lakes and rivers."
+  },
+  {
+   "lesson": "clouds",
+   "key": "91a8d35a93",
+   "text": "The vapour from the last lesson does not stay a gas for ever. High in the sky it turns back into liquid water, and that is what a cloud is made of."
+  },
+  {
+   "lesson": "clouds",
+   "key": "f6df490910",
+   "text": "Rising air cools"
+  },
+  {
+   "lesson": "clouds",
+   "key": "a3badc7d8f",
+   "text": "Clouds form because air containing water vapour rises and cools. As the air rises it is under less pressure, so it spreads out and gets cooler."
+  },
+  {
+   "lesson": "clouds",
+   "key": "15984e3018",
+   "text": "Cooling to the dew point"
+  },
+  {
+   "lesson": "clouds",
+   "key": "b7238b755f",
+   "text": "Clouds form when the air cools below the dew point, and water vapour condenses to liquid water."
+  },
+  {
+   "lesson": "clouds",
+   "key": "52f2eaa167",
+   "text": "Condensation is the change from water vapour back into liquid water. It is the opposite of evaporation."
+  },
+  {
+   "lesson": "clouds",
+   "key": "b301d1afe",
+   "text": "Try it at home"
+  },
+  {
+   "lesson": "clouds",
+   "key": "b2efdeee85",
+   "text": "On a humid day, a glass of iced water collects drops on its outside. The air touching the cold glass cools, and its vapour condenses."
+  },
+  {
+   "lesson": "clouds",
+   "key": "dc3c25551a",
+   "text": "Every droplet needs a seed"
+  },
+  {
+   "lesson": "clouds",
+   "key": "72702985a1",
+   "text": "Vapour condenses more easily when it has a particle to settle on. Tiny bits of dust, salt, smoke and pollen do this job, and they are called condensation nuclei."
+  },
+  {
+   "lesson": "clouds",
+   "key": "767c143768",
+   "text": "Cloud droplets vary a lot in size, from 10 microns, which are millionths of a metre, up to 1 millimetre."
+  },
+  {
+   "lesson": "clouds",
+   "key": "95a4ca1218",
+   "text": "Follow one parcel of air"
+  },
+  {
+   "lesson": "clouds",
+   "key": "2aa8bebb2b",
+   "text": "Warm, damp air near the sea starts to rise."
+  },
+  {
+   "lesson": "clouds",
+   "key": "c32c7be943",
+   "text": "Higher up there is less pressure, so the air spreads out and cools."
+  },
+  {
+   "lesson": "clouds",
+   "key": "5e6f8fab1d",
+   "text": "It cools below its dew point."
+  },
+  {
+   "lesson": "clouds",
+   "key": "f59f67fe30",
+   "text": "Its vapour condenses on specks of dust and salt."
+  },
+  {
+   "lesson": "clouds",
+   "key": "c991136129",
+   "text": "Together, the tiny droplets make a cloud."
+  },
+  {
+   "lesson": "clouds",
+   "key": "551889a465",
+   "text": "A rising parcel of air spreads out and cools. Past its dew point, the vapour condenses into droplets."
+  },
+  {
+   "lesson": "clouds",
+   "key": "8494c3ca26",
+   "text": "Damp air rises, spreads out and cools."
+  },
+  {
+   "lesson": "clouds",
+   "key": "e47edd8038",
+   "text": "Once it cools below the dew point, its vapour condenses."
+  },
+  {
+   "lesson": "clouds",
+   "key": "293d02f15d",
+   "text": "Each droplet forms on a speck of dust, salt, smoke or pollen, and together they make a cloud."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "a1789a606a",
+   "text": "Rain is one kind of precipitation: water released from clouds as rain, freezing rain, sleet, snow or hail."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "3d18e47262",
+   "text": "The droplets in a cloud are far too small to fall as rain. To reach the ground, they have to grow."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "3fbb517ae",
+   "text": "Droplets merge"
+  },
+  {
+   "lesson": "raindrops",
+   "key": "1167039f8e",
+   "text": "Droplets bump into each other and join together, which is called coalescence. Millions of cloud droplets are needed to make a single raindrop."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "3542c4995f",
+   "text": "A drop leaves the cloud once it falls faster than the updraft, the rising air inside the cloud."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "e8d8b6a2d",
+   "text": "The ice route"
+  },
+  {
+   "lesson": "raindrops",
+   "key": "42feb8f783",
+   "text": "When a cloud holds ice crystals, the crystals can grow quickly by taking water from the cloud. This is called the Bergeron process."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "87dd9a6c48",
+   "text": "The crystals may fall as snow, or melt on the way down and fall as rain."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "a59c9c5017",
+   "text": "The shape of a raindrop"
+  },
+  {
+   "lesson": "raindrops",
+   "key": "d5831a626e",
+   "text": "Raindrops are not shaped like teardrops. Small drops, with a radius under 1 millimetre, are round like a ball."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "6d5ded5d5c",
+   "text": "At about 2 to 3 millimetres across, a falling drop is flat underneath, like a hamburger bun."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "0ad191a957",
+   "text": "At about 4 to 5 millimetres, the dip in its bottom grows into a shape like a parachute."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "0425ba9834",
+   "text": "Bigger still, the drop breaks up into smaller drops."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "d3aa60a65a",
+   "text": "As a falling drop grows, air pushes its bottom flat, then hollows it out, until it splits."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "693ab32c3b",
+   "text": "Cloud droplets are too small to fall, so they have to grow."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "43ade61d33",
+   "text": "They merge, and millions of them make one raindrop."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "9d97615746",
+   "text": "In icy clouds, crystals grow fast and fall as snow, or melt into rain."
+  },
+  {
+   "lesson": "raindrops",
+   "key": "781630a640",
+   "text": "Small raindrops are round, and big ones flatten and break apart."
+  }
+ ]
+}
