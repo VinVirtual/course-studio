@@ -8,9 +8,9 @@
   "lang": "en-us",
   "bitrate": 32,
   "notice": "Computer-generated voice (Kokoro text-to-speech).",
-  "count": 51,
-  "totalBytes": 1006560,
-  "totalSeconds": 251.64,
+  "count": 50,
+  "totalBytes": 978816,
+  "totalSeconds": 244.7,
   "lines": {
     "215a310c81": {
       "file": "215a310c81.mp3",
@@ -187,14 +187,6 @@
       "take": "2f1e313fb8",
       "level": 0.0786,
       "text": "Vapour condenses more easily when it has a particle to settle on. Tiny bits of dust, salt, smoke and pollen do this job, and they are called condensation nuclei."
-    },
-    "767c143768": {
-      "file": "767c143768.mp3",
-      "seconds": 6.94,
-      "bytes": 27744,
-      "take": "f33bc0897f",
-      "level": 0.0769,
-      "text": "Cloud droplets vary a lot in size, from 10 microns, which are millionths of a metre, up to 1 millimetre."
     },
     "95a4ca1218": {
       "file": "95a4ca1218.mp3",

@@ -12,7 +12,6 @@
     { "type": "callout", "tone": "tip", "title": "Try it at home", "text": "On a humid day, a glass of iced water collects drops on its outside. The air touching the cold glass cools, and its vapour condenses.", "confirm": "Everyday example added by the writer. It is not in the sources; check it before publishing." },
     { "type": "heading", "text": "Every droplet needs a seed" },
     { "type": "paragraph", "text": "Vapour condenses more easily when it has a particle to settle on. Tiny bits of dust, salt, smoke and pollen do this job, and they are called [[condensation nuclei]].", "cite": ["usgs-cond", "ucar-clouds"] },
-    { "type": "paragraph", "text": "Cloud droplets vary a lot in size, from 10 microns, which are millionths of a metre, up to 1 millimetre.", "cite": ["usgs-cond"] },
     { "type": "example", "title": "Follow one parcel of air", "steps": ["Warm, damp air near the sea starts to rise.", "Higher up there is less pressure, so the air spreads out and cools.", "It cools below its dew point.", "Its vapour condenses on specks of dust and salt."], "result": "Together, the tiny droplets make a cloud.", "cite": ["usgs-cond", "ucar-clouds"] },
     { "type": "figure", "src": "figures/rising-air.svg", "alt": "A circle of air rises from the ground and grows larger as it goes up; above a dashed line marked dew point it becomes a cloud dotted with small droplets.", "caption": "A rising parcel of air spreads out and cools. Past its dew point, the vapour condenses into droplets.", "cite": ["ucar-clouds"] }
   ],

@@ -239,7 +239,7 @@ ol.prose-list li::marker { font-family: var(--serif); font-size: 1.15em; }
 
 /* proof sentences, shown from the quiz */
 .proof.is-shown { animation: proof-flash 2.4s var(--ease) both; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-.proof:focus { outline: none; }
+.proof:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
 @keyframes proof-flash { 0%, 55% { background: var(--tint-strong); box-shadow: 0 0 0 3px var(--tint-strong); } 100% { background: var(--tint); box-shadow: 0 0 0 3px var(--tint); } }
 
 /* callouts */

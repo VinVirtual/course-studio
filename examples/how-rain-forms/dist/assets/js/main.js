@@ -1,6 +1,7 @@
 // Entry point for every page. Each feature is small and independent; a failure in one leaves the rest working.
 import { setupTerms } from './glossary.js';
 import { setupNarration } from './narration.js';
+import { basePathOf } from './progress-core.js';
 import { createProgress, showIndexProgress, trackLesson } from './progress.js';
 import { setupQuiz } from './quiz.js';
 import { setupSearch } from './search.js';
@@ -18,7 +19,7 @@ const run = (name, feature) => {
   }
 };
 
-const progress = data.course ? createProgress(data.course) : null;
+const progress = data.course ? createProgress(data.course, data.title, basePathOf(data.root, window.location.href)) : null;
 run('theme', setupTheme);
 run('search', () => setupSearch(data));
 if (document.body.classList.contains('is-index') && progress) run('progress', () => showIndexProgress(progress, data));
