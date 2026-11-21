@@ -25,6 +25,28 @@ export function fileFor(root, urlPath) {
   return existsSync(file) && statSync(file).isFile() ? file : null;
 }
 
+/**
+ * One byte range from a Range header ("bytes=0-99", "bytes=100-", "bytes=-100"), clamped to the file.
+ * Null when it cannot be satisfied or is malformed (several ranges are not supported).
+ */
+export function parseRange(header, size) {
+  const match = /^bytes=(\d*)-(\d*)$/.exec(String(header).trim());
+  if (!match || (match[1] === '' && match[2] === '') || size === 0) return null;
+  let start;
+  let end;
+  if (match[1] === '') {
+    const suffix = Number(match[2]);
+    if (suffix === 0) return null;
+    start = Math.max(0, size - suffix);
+    end = size - 1;
+  } else {
+    start = Number(match[1]);
+    end = match[2] === '' ? size - 1 : Math.min(Number(match[2]), size - 1);
+  }
+  if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start > end || start >= size) return null;
+  return { start, end };
+}
+
 export function serve(folder, { port = 4180, log = () => {} } = {}) {
   const root = resolve(folder);
   const server = createServer((request, response) => {
@@ -45,17 +67,31 @@ export function serve(folder, { port = 4180, log = () => {} } = {}) {
     }
     const size = statSync(file).size;
     const headers = { 'content-type': TYPES[extname(file).toLowerCase()] ?? 'application/octet-stream', 'cache-control': 'no-cache', 'accept-ranges': 'bytes' };
-    const range = /bytes=(\d*)-(\d*)/.exec(request.headers.range ?? '');
-    if (range) {
-      const start = range[1] ? Number(range[1]) : 0;
-      const end = range[2] ? Math.min(Number(range[2]), size - 1) : size - 1;
-      response.writeHead(206, { ...headers, 'content-range': `bytes ${start}-${end}/${size}`, 'content-length': end - start + 1 });
-      createReadStream(file, { start, end }).pipe(response);
+    const send = (status, extra, options) => {
+      response.writeHead(status, { ...headers, ...extra });
+      if (request.method === 'HEAD') {
+        response.end();
+        return;
+      }
+      const stream = createReadStream(file, options);
+      stream.on('error', () => response.destroy());
+      stream.pipe(response);
+    };
+    if (request.headers.range) {
+      const range = parseRange(request.headers.range, size);
+      if (!range) {
+        response.writeHead(416, { 'content-range': `bytes */${size}` }).end();
+        return;
+      }
+      send(206, { 'content-range': `bytes ${range.start}-${range.end}/${size}`, 'content-length': range.end - range.start + 1 }, range);
       return;
     }
-    response.writeHead(200, { ...headers, 'content-length': size });
-    if (request.method === 'HEAD') response.end();
-    else createReadStream(file).pipe(response);
+    send(200, { 'content-length': size });
+  });
+  server.on('clientError', (error, socket) => socket.destroy());
+  server.on('error', (error) => {
+    log(`course: cannot serve on port ${port}: ${error.code === 'EADDRINUSE' ? 'it is in use (try --port)' : error.message}`);
+    process.exitCode = 1;
   });
   server.listen(port, '127.0.0.1', () => log(`serving ${root} on http://127.0.0.1:${server.address().port}/  (Ctrl+C stops)`));
   return server;
