@@ -48,7 +48,7 @@ test('a lesson page holds the parts it promises', () => {
   assert.match(html, /id="proof-2"/);
   assert.match(html, /href="#src-usgs-cond"/);
   assert.match(html, /rel="next"/);
-  assert.match(html, /<svg aria-hidden="true"/);
+  assert.match(html, /<div class="fig-art" role="img"[^>]*><svg [^>]*aria-hidden="true"/);
   assert.match(html, /role="img" aria-label="A circle of air rises/);
   assert.doesNotMatch(html, /https?:\/\/(?!www\.usgs\.gov|scied\.ucar\.edu|www\.w3\.org\/2000\/svg)/);
   const search = JSON.parse(readFileSync(join(out, 'assets', 'search.json'), 'utf8'));
@@ -67,5 +67,5 @@ test('with site-narrator and recordings, the built example verifies', { skip: !e
 });
 
 test('the output folder may not be the course folder', () => {
-  assert.throws(() => buildCourse(loadCourse(EXAMPLE), { out: EXAMPLE, env: NO_NARRATOR }), /must not be the course folder/);
+  assert.throws(() => buildCourse(loadCourse(EXAMPLE), { out: EXAMPLE, env: NO_NARRATOR }), /is the course folder or contains it/);
 });
