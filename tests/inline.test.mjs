@@ -4,6 +4,7 @@ import { renderBlock } from '../cli/lib/blockhtml.mjs';
 import { termMatcher } from '../cli/lib/glossary.mjs';
 import { textOf, tokenize } from '../cli/lib/html.mjs';
 import { renderInline, renderMarks } from '../cli/lib/inline.mjs';
+import { linkResolver } from '../cli/lib/pages.mjs';
 
 const glossary = [{ id: 'dew-point', term: 'Dew point', aliases: [], definition: 'The temperature.' }];
 const ctx = () => ({ matcher: termMatcher(glossary), seen: new Set(), citeOrder: new Map(), sources: [{ id: 's', title: 'S' }], dir: '.' });
@@ -46,4 +47,13 @@ test('example steps, callout titles and captions are separate lines; code is not
   assert.deepEqual(lines({ type: 'example', title: 'T', steps: ['One.', 'Two.'], result: 'Done.' }), ['T', 'One.', 'Two.', 'Done.']);
   assert.deepEqual(lines({ type: 'callout', title: 'Tip', text: 'Body.' }), ['Tip', 'Body.']);
   assert.deepEqual(lines({ type: 'code', text: 'x = 1' }), []);
+});
+
+test('links resolve for the page they are on, and unsafe schemes never reach the page', () => {
+  const resolve = linkResolver('../', [{ id: 'dew-point', term: 'Dew point', aliases: [] }]);
+  assert.deepEqual(resolve('lesson:b#part'), { href: '../b/index.html#part', external: false });
+  assert.deepEqual(resolve('glossary:dew point'), { href: '../glossary/index.html#dew-point', external: false });
+  assert.deepEqual(resolve('https://example.org'), { href: 'https://example.org', external: true });
+  assert.equal(resolve('javascript:alert(1)').href, '#');
+  assert.equal(resolve('handout.pdf').href, '../files/handout.pdf');
 });

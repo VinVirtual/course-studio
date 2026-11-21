@@ -28,6 +28,8 @@ export function linkResolver(root, glossary) {
       return { href: `${root}glossary/index.html${entry ? `#${entry.id}` : ''}`, external: false };
     }
     if (/^(https?:|mailto:)/i.test(href)) return { href, external: true };
+    // Any other scheme (javascript:, data: ...) is never written into a page, even with build --force.
+    if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return { href: '#', external: false };
     if (href.startsWith('#')) return { href, external: false };
     return { href: `${root}files/${href}`, external: false };
   };
