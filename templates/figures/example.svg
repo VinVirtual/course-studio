@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200">
+  <rect class="c-paper" x="40" y="50" width="160" height="100" rx="8"/>
+  <rect class="s-ink" x="40" y="50" width="160" height="100" rx="8" stroke-width="2"/>
+  <path class="s-accent" d="M210 100h200" stroke-width="3" stroke-linecap="round"/>
+  <path class="c-accent" d="M420 100l-14-8v16z"/>
+  <rect class="c-tint" x="440" y="50" width="160" height="100" rx="8"/>
+  <text x="120" y="106" font-size="18" text-anchor="middle">before</text>
+  <text class="t-serif" x="520" y="108" font-size="22" text-anchor="middle">after</text>
+</svg>

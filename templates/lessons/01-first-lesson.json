@@ -1,0 +1,29 @@
+{
+  "id": "first-lesson",
+  "title": "The first lesson",
+  "summary": "One or two sentences that say what this lesson explains.",
+  "blocks": [
+    { "type": "paragraph", "text": "Open with what the reader will learn and why it matters. Every sentence comes from the sources below, and every block cites them.", "cite": ["source-1"] },
+    { "type": "heading", "text": "The first idea" },
+    { "type": "paragraph", "text": "Explain one idea per section. Mark a glossary word like this: [[example term]]. Link to another lesson with [its title](lesson:first-lesson#the-first-idea).", "cite": ["source-1"] },
+    { "type": "list", "items": ["A short point.", "Another short point."], "cite": ["source-1"] },
+    { "type": "callout", "tone": "note", "text": "An aside the reader should not miss.", "cite": ["source-1"] },
+    { "type": "example", "title": "A worked example", "steps": ["First step.", "Second step."], "result": "What the steps show.", "cite": ["source-1"] },
+    { "type": "figure", "src": "figures/example.svg", "alt": "Describe what the picture shows, for someone who cannot see it.", "caption": "Say what the reader should notice in the figure.", "cite": ["source-1"] },
+    { "type": "code", "lang": "text", "text": "Code is shown, never read aloud." },
+    { "type": "quote", "text": "A short quotation, copied exactly from a source.", "by": "Who said it", "cite": ["source-1"] }
+  ],
+  "takeaways": ["The one thing to remember.", "The second thing to remember."],
+  "recap": ["A recap line is read aloud at the end.", "Keep it to a few short sentences."],
+  "quiz": [
+    {
+      "question": "What does each section explain?",
+      "options": ["Several ideas at once", "One idea"],
+      "answer": 1,
+      "proof": "Explain one idea per section."
+    }
+  ],
+  "sources": [
+    { "id": "source-1", "title": "Title of the source document", "publisher": "Who published it", "url": "https://example.org/your-source", "accessed": "2026-01-01" }
+  ]
+}

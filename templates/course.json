@@ -1,0 +1,11 @@
+{
+  "title": "Your course title",
+  "subtitle": "One sentence that says what the reader will understand by the end.",
+  "audience": "who it is for, in a few words",
+  "author": "Your name",
+  "language": "en",
+  "lessons": ["lessons/01-first-lesson.json"],
+  "glossary": "glossary.json",
+  "theme": { "preset": "paper" },
+  "voice": { "voice": "af_heart", "speed": 0.96, "say": {} }
+}
