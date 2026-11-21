@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# course-studio launcher: course <command> ...   (run "course help" for the list)
+exec node "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/cli/course.mjs" "$@"
