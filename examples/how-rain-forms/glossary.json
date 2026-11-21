@@ -1,0 +1,11 @@
+[
+  { "term": "Evaporation", "definition": "The change from liquid water into water vapour, a gas. It happens when heat breaks the bonds that hold water molecules together.", "lesson": "water-into-air" },
+  { "term": "Water vapour", "aliases": ["vapour"], "definition": "Water in the form of a gas. It is invisible, and it mixes into the air.", "lesson": "water-into-air" },
+  { "term": "Condensation", "definition": "The change from water vapour back into liquid water. It is the opposite of evaporation.", "lesson": "clouds" },
+  { "term": "Dew point", "definition": "The temperature air has to cool to before its water vapour starts to condense into liquid water.", "lesson": "clouds" },
+  { "term": "Condensation nuclei", "definition": "Tiny particles in the air, such as dust, salt, smoke and pollen, that water vapour condenses on to form cloud droplets.", "lesson": "clouds" },
+  { "term": "Precipitation", "definition": "Water released from clouds as rain, freezing rain, sleet, snow or hail.", "lesson": "raindrops" },
+  { "term": "Coalescence", "definition": "Droplets bumping into each other and merging into bigger drops.", "lesson": "raindrops" },
+  { "term": "Updraft", "definition": "Air moving upward inside a cloud. A drop falls out of the cloud only when it falls faster than the updraft.", "lesson": "raindrops" },
+  { "term": "Bergeron process", "definition": "The way ice crystals in a cloud grow quickly by taking water from the cloud, then fall as snow or melt into rain.", "lesson": "raindrops" }
+]

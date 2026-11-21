@@ -1,0 +1,47 @@
+{
+  "id": "clouds",
+  "title": "Clouds are made of droplets",
+  "summary": "A cloud looks solid, but it is a crowd of tiny drops of liquid water. Here is how the vapour turns back into liquid.",
+  "blocks": [
+    { "type": "paragraph", "text": "The vapour from the last lesson does not stay a gas for ever. High in the sky it turns back into liquid water, and that is what a cloud is made of.", "cite": ["usgs-cond"] },
+    { "type": "heading", "text": "Rising air cools" },
+    { "type": "paragraph", "text": "Clouds form because air containing water vapour rises and cools. As the air rises it is under less pressure, so it spreads out and gets cooler.", "cite": ["usgs-cond", "ucar-clouds"] },
+    { "type": "heading", "text": "Cooling to the dew point" },
+    { "type": "paragraph", "text": "Clouds form when the air cools below the [[dew point]], and water vapour condenses to liquid water.", "cite": ["ucar-clouds"] },
+    { "type": "paragraph", "text": "[[Condensation]] is the change from water vapour back into liquid water. It is the opposite of evaporation.", "cite": ["usgs-cond"] },
+    { "type": "callout", "tone": "tip", "title": "Try it at home", "text": "On a humid day, a glass of iced water collects drops on its outside. The air touching the cold glass cools, and its vapour condenses.", "confirm": "Everyday example added by the writer. It is not in the sources; check it before publishing." },
+    { "type": "heading", "text": "Every droplet needs a seed" },
+    { "type": "paragraph", "text": "Vapour condenses more easily when it has a particle to settle on. Tiny bits of dust, salt, smoke and pollen do this job, and they are called [[condensation nuclei]].", "cite": ["usgs-cond", "ucar-clouds"] },
+    { "type": "paragraph", "text": "Cloud droplets vary a lot in size, from 10 microns, which are millionths of a metre, up to 1 millimetre.", "cite": ["usgs-cond"] },
+    { "type": "example", "title": "Follow one parcel of air", "steps": ["Warm, damp air near the sea starts to rise.", "Higher up there is less pressure, so the air spreads out and cools.", "It cools below its dew point.", "Its vapour condenses on specks of dust and salt."], "result": "Together, the tiny droplets make a cloud.", "cite": ["usgs-cond", "ucar-clouds"] },
+    { "type": "figure", "src": "figures/rising-air.svg", "alt": "A circle of air rises from the ground and grows larger as it goes up; above a dashed line marked dew point it becomes a cloud dotted with small droplets.", "caption": "A rising parcel of air spreads out and cools. Past its dew point, the vapour condenses into droplets.", "cite": ["ucar-clouds"] }
+  ],
+  "takeaways": [
+    "Rising air is under less pressure, so it spreads out and cools.",
+    "Below the dew point, vapour condenses into liquid water.",
+    "Droplets form on condensation nuclei: dust, salt, smoke and pollen."
+  ],
+  "recap": [
+    "Damp air rises, spreads out and cools.",
+    "Once it cools below the dew point, its vapour condenses.",
+    "Each droplet forms on a speck of dust, salt, smoke or pollen, and together they make a cloud."
+  ],
+  "quiz": [
+    {
+      "question": "Why does rising air get cooler?",
+      "options": ["It moves away from the sun", "It is under less pressure, so it spreads out", "It touches the cold cloud above it"],
+      "answer": 1,
+      "proof": "As the air rises it is under less pressure, so it spreads out and gets cooler."
+    },
+    {
+      "question": "What do condensation nuclei do?",
+      "options": ["They give vapour a particle to settle on", "They heat the air so it rises", "They break raindrops apart"],
+      "answer": 0,
+      "proof": "Vapour condenses more easily when it has a particle to settle on."
+    }
+  ],
+  "sources": [
+    { "id": "usgs-cond", "title": "Condensation and the Water Cycle", "publisher": "U.S. Geological Survey, Water Science School", "url": "https://www.usgs.gov/special-topics/water-science-school/science/condensation-and-water-cycle", "accessed": "2026-11-21" },
+    { "id": "ucar-clouds", "title": "Clouds and How They Form", "publisher": "UCAR Center for Science Education", "url": "https://scied.ucar.edu/learning-zone/clouds/how-clouds-form", "accessed": "2026-11-21" }
+  ]
+}

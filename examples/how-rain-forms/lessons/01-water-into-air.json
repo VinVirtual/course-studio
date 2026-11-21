@@ -1,0 +1,45 @@
+{
+  "id": "water-into-air",
+  "title": "Water goes up",
+  "summary": "Before rain can fall, water has to reach the sky. It travels there as a gas you cannot see.",
+  "blocks": [
+    { "type": "paragraph", "text": "Every raindrop starts as water on the ground. To fall from the sky, it first has to get up there, and it makes the trip as a gas.", "cite": ["usgs-evap"] },
+    { "type": "heading", "text": "Liquid becomes vapour" },
+    { "type": "paragraph", "text": "[[Evaporation]] is the change from liquid water into water vapour, a gas. It happens when heat breaks the bonds that hold water molecules together.", "cite": ["usgs-evap"] },
+    { "type": "paragraph", "text": "The vapour mixes into the air and cannot be seen. The water has not gone anywhere: it is now part of the air around us.", "cite": ["usgs-evap"] },
+    { "type": "heading", "text": "Where the vapour comes from" },
+    { "type": "paragraph", "text": "About 90 percent of the moisture in the air came from water evaporating from oceans, seas, lakes and rivers.", "cite": ["usgs-evap"] },
+    { "type": "paragraph", "text": "Oceans cover more than 70 percent of Earth's surface, which is why so much of that moisture comes from them.", "cite": ["usgs-evap"] },
+    { "type": "figure", "src": "figures/water-cycle.svg", "alt": "Sun shines on the sea; dotted wavy lines show water vapour rising, an arrow carries it to a cloud over the land, and rain falls from the cloud.", "caption": "Heat turns water into vapour, the vapour is carried up into a cloud, and the cloud can rain on the land.", "cite": ["usgs-evap", "usgs-precip"] },
+    { "type": "callout", "tone": "note", "text": "The next lesson follows this vapour as it rises, cools and turns back into liquid by [[condensation]]. That is how a cloud is made. You can read ahead in the [glossary](glossary:condensation) or go to [lesson 2](lesson:clouds#rising-air-cools).", "cite": ["usgs-cond"] }
+  ],
+  "takeaways": [
+    "Evaporation turns liquid water into water vapour, an invisible gas.",
+    "It needs heat to break the bonds between water molecules.",
+    "Oceans, seas, lakes and rivers supply about 90 percent of the moisture in the air."
+  ],
+  "recap": [
+    "Rain starts as water on the ground.",
+    "Heat turns it into water vapour, a gas you cannot see.",
+    "Most of that vapour comes from oceans, seas, lakes and rivers."
+  ],
+  "quiz": [
+    {
+      "question": "What is evaporation?",
+      "options": ["Water vapour turning into liquid water", "Liquid water turning into water vapour", "Ice melting into liquid water"],
+      "answer": 1,
+      "proof": "Evaporation is the change from liquid water into water vapour, a gas."
+    },
+    {
+      "question": "Where did about 90 percent of the moisture in the air come from?",
+      "options": ["Plants and trees", "Oceans, seas, lakes and rivers", "Melting snow on mountains"],
+      "answer": 1,
+      "proof": "About 90 percent of the moisture in the air came from water evaporating from oceans, seas, lakes and rivers."
+    }
+  ],
+  "sources": [
+    { "id": "usgs-evap", "title": "Evaporation and the Water Cycle", "publisher": "U.S. Geological Survey, Water Science School", "url": "https://www.usgs.gov/special-topics/water-science-school/science/evaporation-and-water-cycle", "accessed": "2026-11-21" },
+    { "id": "usgs-precip", "title": "Precipitation and the Water Cycle", "publisher": "U.S. Geological Survey, Water Science School", "url": "https://www.usgs.gov/special-topics/water-science-school/science/precipitation-and-water-cycle", "accessed": "2026-11-21" },
+    { "id": "usgs-cond", "title": "Condensation and the Water Cycle", "publisher": "U.S. Geological Survey, Water Science School", "url": "https://www.usgs.gov/special-topics/water-science-school/science/condensation-and-water-cycle", "accessed": "2026-11-21" }
+  ]
+}

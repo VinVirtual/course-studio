@@ -1,0 +1,55 @@
+{
+  "id": "raindrops",
+  "title": "From droplet to raindrop",
+  "summary": "Cloud droplets are far too small to fall. This is how they grow heavy enough to reach the ground, and what shape they are when they do.",
+  "blocks": [
+    { "type": "paragraph", "text": "Rain is one kind of [[precipitation]]: water released from clouds as rain, freezing rain, sleet, snow or hail.", "cite": ["usgs-rain"] },
+    { "type": "paragraph", "text": "The droplets in a cloud are far too small to fall as rain. To reach the ground, they have to grow.", "cite": ["usgs-precip"] },
+    { "type": "heading", "text": "Droplets merge" },
+    { "type": "paragraph", "text": "Droplets bump into each other and join together, which is called [[coalescence]]. Millions of cloud droplets are needed to make a single raindrop.", "cite": ["usgs-precip", "usgs-cond"] },
+    { "type": "paragraph", "text": "A drop leaves the cloud once it falls faster than the [[updraft]], the rising air inside the cloud.", "cite": ["usgs-precip"] },
+    { "type": "heading", "text": "The ice route" },
+    { "type": "paragraph", "text": "When a cloud holds ice crystals, the crystals can grow quickly by taking water from the cloud. This is called the [[Bergeron process]].", "cite": ["usgs-precip"] },
+    { "type": "paragraph", "text": "The crystals may fall as snow, or melt on the way down and fall as rain.", "cite": ["usgs-precip"] },
+    { "type": "heading", "text": "The shape of a raindrop" },
+    { "type": "paragraph", "text": "Raindrops are not shaped like teardrops. Small drops, with a radius under 1 millimetre, are round like a ball.", "cite": ["usgs-rain", "usgs-precip"] },
+    { "type": "list", "items": ["At about 2 to 3 millimetres across, a falling drop is flat underneath, like a hamburger bun.", "At about 4 to 5 millimetres, the dip in its bottom grows into a shape like a parachute.", "Bigger still, the drop breaks up into smaller drops."], "cite": ["usgs-precip"] },
+    { "type": "figure", "src": "figures/drop-shapes.svg", "alt": "Four drawings from left to right: a small round drop, a wider drop flattened underneath, a large drop hollowed out like a parachute, and a cluster of small drops after it splits.", "caption": "As a falling drop grows, air pushes its bottom flat, then hollows it out, until it splits.", "cite": ["usgs-precip"] }
+  ],
+  "takeaways": [
+    "Cloud droplets must grow before they can fall.",
+    "They grow by merging, and in icy clouds by the Bergeron process.",
+    "Small raindrops are round; bigger ones flatten, hollow out and split."
+  ],
+  "recap": [
+    "Cloud droplets are too small to fall, so they have to grow.",
+    "They merge, and millions of them make one raindrop.",
+    "In icy clouds, crystals grow fast and fall as snow, or melt into rain.",
+    "Small raindrops are round, and big ones flatten and break apart."
+  ],
+  "quiz": [
+    {
+      "question": "Roughly how many cloud droplets does one raindrop take?",
+      "options": ["About ten", "A few hundred", "Millions"],
+      "answer": 2,
+      "proof": "Millions of cloud droplets are needed to make a single raindrop."
+    },
+    {
+      "question": "When does a drop fall out of the cloud?",
+      "options": ["When it falls faster than the updraft", "When it freezes", "When the cloud turns grey"],
+      "answer": 0,
+      "proof": "A drop leaves the cloud once it falls faster than the updraft, the rising air inside the cloud."
+    },
+    {
+      "question": "What shape is a small raindrop?",
+      "options": ["A teardrop", "Round like a ball", "Flat like a coin"],
+      "answer": 1,
+      "proof": "Small drops, with a radius under 1 millimetre, are round like a ball."
+    }
+  ],
+  "sources": [
+    { "id": "usgs-precip", "title": "Precipitation and the Water Cycle", "publisher": "U.S. Geological Survey, Water Science School", "url": "https://www.usgs.gov/special-topics/water-science-school/science/precipitation-and-water-cycle", "accessed": "2026-11-21" },
+    { "id": "usgs-rain", "title": "Rain and Precipitation", "publisher": "U.S. Geological Survey, Water Science School", "url": "https://www.usgs.gov/special-topics/water-science-school/science/rain-and-precipitation", "accessed": "2026-11-21" },
+    { "id": "usgs-cond", "title": "Condensation and the Water Cycle", "publisher": "U.S. Geological Survey, Water Science School", "url": "https://www.usgs.gov/special-topics/water-science-school/science/condensation-and-water-cycle", "accessed": "2026-11-21" }
+  ]
+}

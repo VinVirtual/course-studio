@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240">
+  <path class="s-rule" stroke-width="1.5" d="M20 160H620"/>
+  <circle class="c-accent" cx="90" cy="118" r="20"/>
+  <path class="c-accent" d="M196 134C196 92 276 92 276 134C264 129 250 127 236 128C222 127 208 129 196 134Z"/>
+  <path class="c-accent" d="M378 140C378 74 482 74 482 140C472 124 452 112 430 112C408 112 388 124 378 140Z"/>
+  <g class="c-accent"><circle cx="546" cy="104" r="12"/><circle cx="578" cy="124" r="9"/><circle cx="550" cy="138" r="7"/><circle cx="590" cy="98" r="6"/><circle cx="526" cy="126" r="6"/></g>
+  <g class="s-ink" stroke-width="1.5" stroke-linecap="round"><path d="M236 156v-18M231 143l5-5 5 5M430 156v-36M425 125l5-5 5 5"/></g>
+  <text x="244" y="154" font-size="12" class="t-soft">air</text>
+  <text x="438" y="154" font-size="12" class="t-soft">air</text>
+  <text class="t-serif" x="20" y="34" font-size="18">bigger drops →</text>
+  <text x="90" y="186" font-size="15" text-anchor="middle">round</text>
+  <text x="90" y="206" font-size="13" text-anchor="middle" class="t-soft">radius under 1 mm</text>
+  <text x="236" y="186" font-size="15" text-anchor="middle">hamburger bun</text>
+  <text x="236" y="206" font-size="13" text-anchor="middle" class="t-soft">about 2 to 3 mm</text>
+  <text x="430" y="186" font-size="15" text-anchor="middle">parachute</text>
+  <text x="430" y="206" font-size="13" text-anchor="middle" class="t-soft">about 4 to 5 mm</text>
+  <text x="560" y="186" font-size="15" text-anchor="middle">breaks apart</text>
+  <text x="560" y="206" font-size="13" text-anchor="middle" class="t-soft">smaller drops</text>
+</svg>

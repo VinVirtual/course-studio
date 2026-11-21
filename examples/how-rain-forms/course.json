@@ -1,0 +1,12 @@
+{
+  "title": "How rain forms",
+  "subtitle": "From a warm sea to a falling drop, in three short lessons.",
+  "audience": "curious readers, no science background needed",
+  "author": "A course-studio example",
+  "language": "en",
+  "lessons": ["lessons/01-water-into-air.json", "lessons/02-clouds.json", "lessons/03-raindrops.json"],
+  "glossary": "glossary.json",
+  "theme": { "preset": "ink" },
+  "voice": { "voice": "af_heart", "speed": 0.96, "say": {} },
+  "footer": "How rain forms · an example course made with course-studio, written from the public sources listed in each lesson"
+}

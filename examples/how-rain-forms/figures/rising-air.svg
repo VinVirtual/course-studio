@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320">
+  <path class="s-soft" stroke-width="2" d="M56 296V30"/>
+  <path class="c-soft" d="M56 22l-7 14h14z"/>
+  <text x="70" y="36" font-size="14" class="t-soft">higher: less pressure, colder</text>
+  <text x="70" y="290" font-size="14" class="t-soft">near the ground: warm, damp air</text>
+  <path class="s-accent" stroke-width="2" stroke-dasharray="8 6" d="M40 120H600"/>
+  <text x="600" y="140" font-size="14" text-anchor="end" class="t-accent">dew point reached</text>
+  <circle class="c-paper" cx="250" cy="250" r="22"/>
+  <circle class="s-ink" stroke-width="2" cx="250" cy="250" r="22"/>
+  <circle class="c-paper" cx="250" cy="185" r="30"/>
+  <circle class="s-ink" stroke-width="2" cx="250" cy="185" r="30" stroke-dasharray="4 4"/>
+  <path class="s-ink" stroke-width="2" d="M250 228v-18M250 154v-14"/>
+  <path class="c-ink" d="M250 204l-5 9h10zM250 136l-5 9h10z"/>
+  <text x="300" y="255" font-size="15">a parcel of air rises</text>
+  <text x="300" y="190" font-size="15">it spreads out and cools</text>
+  <path class="c-paper" d="M210 104c-26 0-34-28-8-36-2-28 34-38 50-18 14-24 58-20 62 8 30-2 38 40 6 46z"/>
+  <path class="s-ink" stroke-width="2" d="M210 104c-26 0-34-28-8-36-2-28 34-38 50-18 14-24 58-20 62 8 30-2 38 40 6 46z"/>
+  <g class="c-accent">
+    <circle cx="232" cy="80" r="3"/><circle cx="252" cy="70" r="3"/><circle cx="272" cy="84" r="3"/><circle cx="292" cy="72" r="3"/><circle cx="250" cy="92" r="3"/><circle cx="300" cy="92" r="3"/>
+  </g>
+  <text x="344" y="76" font-size="15">vapour condenses on dust and salt:</text>
+  <text class="t-serif" x="344" y="98" font-size="19">a cloud of tiny droplets</text>
+</svg>
