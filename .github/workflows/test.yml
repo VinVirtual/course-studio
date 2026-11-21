@@ -1,0 +1,36 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: course-studio
+          persist-credentials: false
+      # site-narrator is a sibling skill; course-studio finds it through COURSE_NARRATOR.
+      # Pinned so a change there cannot break this repo's CI unnoticed.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: VinVirtual/site-narrator
+          ref: 9274cf93c548a69643652f012d77473eaa337212
+          path: site-narrator
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: Unit tests
+        working-directory: course-studio
+        env:
+          COURSE_NARRATOR: ${{ github.workspace }}/site-narrator
+        run: ./course test

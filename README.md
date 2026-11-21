@@ -1,5 +1,7 @@
 # course-studio
 
+[![test](https://github.com/VinVirtual/course-studio/actions/workflows/test.yml/badge.svg)](https://github.com/VinVirtual/course-studio/actions/workflows/test.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Turn source material into a complete, narrated lesson site that works on any static host.
 
 ![A lesson page with a glossary popover, a section being read aloud, and the quiz on a phone in dark mode](docs/screenshot.jpg)
