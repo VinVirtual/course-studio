@@ -1,9 +1,10 @@
 // Builds the static site: one folder per lesson, a glossary, assets, recordings and a search index.
-import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
+import { courseFile } from './files.mjs';
 import { blockTexts, lessonLines } from './blocks.mjs';
 import { glossaryPage, indexPage, lessonPage, searchEntries } from './pages.mjs';
-import { hasNarrator, narratorPlayer, SITE } from './paths.mjs';
+import { hasNarrator, narratorLicense, narratorPlayer, SITE } from './paths.mjs';
 import { parseInline, voiceKey } from './text.mjs';
 import { themeCss } from './theme.mjs';
 
@@ -12,18 +13,40 @@ const write = (file, content) => {
   writeFileSync(file, content);
 };
 
-/** Files a lesson refers to on disk: raster figures and relative file links. */
+/** Paths a lesson refers to on disk: raster figures and relative file links (checked later by courseFile). */
 function lessonFiles(lesson) {
   const files = [];
   for (const block of lesson.blocks) {
-    if (block.type === 'figure' && !block.src.toLowerCase().endsWith('.svg')) files.push(block.src);
+    if (block.type === 'figure' && !String(block.src).toLowerCase().endsWith('.svg')) files.push(block.src);
     for (const source of blockTexts(block)) {
       for (const mark of parseInline(source).marks) {
-        if (mark.kind === 'link' && !/^([a-z][a-z0-9+.-]*:|#)/i.test(mark.href)) files.push(mark.href.split('#')[0]);
+        if (mark.kind === 'link' && !/^([a-z][a-z0-9+.-]*:|#)/i.test(mark.href)) files.push(mark.href);
       }
     }
   }
   return files;
+}
+
+export class BuildError extends Error {}
+
+/**
+ * Refuses output folders that would destroy something: the course folder, any folder that contains it,
+ * and a non-empty folder that was not written by course-studio (no build.json of ours inside).
+ */
+export function checkOutput(dir, dist) {
+  const root = resolve(dir);
+  const fromDist = relative(dist, root);
+  if (dist === root || !fromDist || (!fromDist.startsWith('..') && !isAbsolute(fromDist))) throw new BuildError(`refusing to build into ${dist}: it is the course folder or contains it`);
+  if (!existsSync(dist)) return;
+  if (!statSync(dist).isDirectory()) throw new BuildError(`refusing to build into ${dist}: it is a file`);
+  if (readdirSync(dist).length === 0) return;
+  let ours = false;
+  try {
+    ours = JSON.parse(readFileSync(join(dist, 'build.json'), 'utf8')).generator === 'course-studio';
+  } catch {
+    ours = false;
+  }
+  if (!ours) throw new BuildError(`refusing to build into ${dist}: it is not empty and was not made by course build (no build.json). Choose an empty or new folder`);
 }
 
 /** The lesson video made by `course video`, if there is one. */
@@ -38,10 +61,26 @@ function videoFor(dir, lesson) {
 
 export function buildCourse(loaded, { out, env = process.env, log = () => {} } = {}) {
   const { course, lessons, glossary, dir } = loaded;
-  const dist = resolve(out ?? join(dir, 'dist'));
-  if (dist === resolve(dir) || !relative(dir, dist) || relative(dist, dir) === '') throw new Error('the output folder must not be the course folder');
+  const target = resolve(out ?? join(dir, 'dist'));
+  checkOutput(dir, target);
+  // Build next to the target and swap it in only when everything worked: a failed build leaves the old site.
+  const dist = `${target}.building-${process.pid}`;
   rmSync(dist, { recursive: true, force: true });
   mkdirSync(dist, { recursive: true });
+  try {
+    const result = writeSite(loaded, dist, { env, log });
+    rmSync(target, { recursive: true, force: true });
+    renameSync(dist, target);
+    log(result.summary.replace('→ ', `→ ${relative(process.cwd(), target) || '.'}`));
+    return { ...result, dist: target };
+  } catch (error) {
+    rmSync(dist, { recursive: true, force: true });
+    throw error;
+  }
+}
+
+function writeSite(loaded, dist, { env, log }) {
+  const { course, lessons, glossary, dir } = loaded;
 
   // assets
   cpSync(join(SITE, 'course.css'), join(dist, 'assets', 'course.css'));
@@ -50,7 +89,11 @@ export function buildCourse(loaded, { out, env = process.env, log = () => {} } =
   cpSync(join(SITE, 'js'), join(dist, 'assets', 'js'), { recursive: true });
   write(join(dist, 'assets', 'theme.css'), themeCss(course.theme));
   const narrator = hasNarrator(env);
-  if (narrator) copyFileSync(narratorPlayer(env), join(dist, 'assets', 'js', 'player.js'));
+  if (narrator) {
+    copyFileSync(narratorPlayer(env), join(dist, 'assets', 'js', 'player.js'));
+    // site-narrator is MIT: its notice travels with the copy.
+    if (existsSync(narratorLicense(env))) copyFileSync(narratorLicense(env), join(dist, 'assets', 'js', 'player.js.LICENSE.txt'));
+  }
   else log('warning: site-narrator not found; read-aloud is left out (set COURSE_NARRATOR)');
 
   // recordings: only the ones the course still uses
@@ -82,9 +125,10 @@ export function buildCourse(loaded, { out, env = process.env, log = () => {} } =
     }
     const { html } = lessonPage({ course, lessons, glossary, lesson, dir, video: video && video.files.poster ? video : null, voice: voiced.has(lesson.id) });
     write(join(dist, lesson.id, 'index.html'), html);
-    for (const file of lessonFiles(lesson)) {
-      const from = join(dir, file);
-      if (existsSync(from)) write(join(dist, 'files', file), readFileSync(from));
+    for (const path of lessonFiles(lesson)) {
+      const found = courseFile(dir, path);
+      if (found.error) log(`warning: not published (${found.error})`);
+      else write(join(dist, 'files', found.rel), readFileSync(found.file));
     }
   }
 
@@ -94,8 +138,8 @@ export function buildCourse(loaded, { out, env = process.env, log = () => {} } =
     JSON.stringify({ generator: 'course-studio', course: course.slug, lessons: lessons.map((lesson) => lesson.id), lines: lines.map(({ lesson, text, key }) => ({ lesson, key, text })) }, null, 1),
   );
   const plural = (number, word) => `${number} ${word}${number === 1 ? '' : 's'}`;
-  log(`built ${plural(lessons.length, 'lesson')}, ${plural(glossary.length, 'glossary term')}, ${plural(recorded, 'recording')} of ${plural(new Set(lines.map((line) => line.key)).size, 'line')} → ${relative(process.cwd(), dist) || '.'}`);
-  return { dist, lines, recorded };
+  const summary = `built ${plural(lessons.length, 'lesson')}, ${plural(glossary.length, 'glossary term')}, ${plural(recorded, 'recording')} of ${plural(new Set(lines.map((line) => line.key)).size, 'line')} → `;
+  return { lines, recorded, summary };
 }
 
 function mkdirp(path) {

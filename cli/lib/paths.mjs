@@ -13,6 +13,7 @@ export const reelHome = (env = process.env) => resolve(env.COURSE_REEL || join(h
 
 export const narratorCli = (env) => join(narratorHome(env), 'narrate');
 export const narratorPlayer = (env) => join(narratorHome(env), 'player', 'player.js');
+export const narratorLicense = (env) => join(narratorHome(env), 'LICENSE');
 export const reelCli = (env) => join(reelHome(env), 'reel');
 
 export const hasNarrator = (env) => existsSync(narratorCli(env)) && existsSync(narratorPlayer(env));

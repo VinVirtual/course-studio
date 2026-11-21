@@ -1,6 +1,7 @@
 // The three kinds of page: the course index, a lesson, and the glossary. Plus the search entries.
 import { blockTexts, sectionsOf } from './blocks.mjs';
 import { citations, renderBlock } from './blockhtml.mjs';
+import { courseFile } from './files.mjs';
 import { termMatcher } from './glossary.mjs';
 import { renderInline } from './inline.mjs';
 import { ICONS, page } from './layout.mjs';
@@ -16,7 +17,7 @@ export const lessonMinutes = (lesson) =>
 export const lessonHref = (lesson, root = '') => `${root}${lesson.id}/index.html`;
 
 /** Resolves a link written in a lesson (lesson:, glossary:, #anchor, http) for a page at `root`. */
-export function linkResolver(root, glossary) {
+export function linkResolver(root, glossary, dir = null) {
   const matcher = termMatcher(glossary);
   return (href) => {
     if (href.startsWith('lesson:')) {
@@ -31,7 +32,11 @@ export function linkResolver(root, glossary) {
     // Any other scheme (javascript:, data: ...) is never written into a page, even with build --force.
     if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return { href: '#', external: false };
     if (href.startsWith('#')) return { href, external: false };
-    return { href: `${root}files/${href}`, external: false };
+    // A file in the course folder; anything outside it, hidden or missing is not linked.
+    const found = dir ? courseFile(dir, href) : { rel: href.split('#')[0] };
+    if (found.error) return { href: '#', external: false };
+    const hash = href.includes('#') ? `#${href.split('#').slice(1).join('#')}` : '';
+    return { href: `${root}files/${found.rel}${hash}`, external: false };
   };
 }
 
@@ -55,7 +60,8 @@ function quizHtml(lesson) {
       const options = item.options
         .map((option, at) => `<li><button type="button" class="opt" data-index="${at}"><span class="opt-key" aria-hidden="true">${String.fromCharCode(65 + at)}</span><span class="opt-text">${escapeHtml(plainText(option))}</span></button></li>`)
         .join('');
-      return `<li class="q" data-answer="${item.answer}" data-proof="${proofId(index)}">
+      const answer = Number.isInteger(item.answer) ? item.answer : -1;
+      return `<li class="q" data-answer="${answer}" data-proof="${proofId(index)}">
 <fieldset><legend><span class="q-num">Question ${index + 1}</span> ${escapeHtml(plainText(item.question))}</legend>
 <ol class="opts" role="list">${options}</ol></fieldset>
 <div class="q-feedback" role="status" aria-live="polite"></div>
@@ -98,7 +104,7 @@ export function lessonPage({ course, lessons, glossary, lesson, dir, video, voic
     proofs: lesson.quiz.map((item, index) => ({ text: item.proof, id: proofId(index) })),
     citeOrder: new Map(),
     sources: lesson.sources,
-    resolveLink: linkResolver(root, glossary),
+    resolveLink: linkResolver(root, glossary, dir),
     asset: (src) => `${root}files/${src}`,
   };
   const sections = sectionsOf(lesson);
