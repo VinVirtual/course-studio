@@ -11,8 +11,8 @@ It is packaged as a [Claude Code](https://claude.com/claude-code) skill (`SKILL.
 ## What you get
 
 - **`course`**, a command line: `check`, `new`, `lint`, `narrate`, `video`, `build`, `serve`, `verify`, `test`.
-- **A lint that guards the content**: blocks that state numbers or research claims without a source, sources that are cited but not listed, lessons, paragraphs and sentences that are too long, `[[terms]]` missing from the glossary, quiz answers whose "proof" sentence is not in the lesson or does not say the answer, broken lesson, section, glossary and file links, figures without useful alt text, missing or unsafe images. It also prints every claim marked `confirm` (not traced to a source) for a person to check.
-- **A built site** that is plain HTML, one stylesheet, two self-hosted fonts and a few small ES modules (16 KB of script gzipped, 8 KB of CSS gzipped for the example):
+- **A lint that guards the content**: blocks that state numbers or research claims without citing a source; recaps, takeaways, headings, summaries, quiz questions and answers, glossary definitions and the subtitle that state a number or claim no cited block states; sources that are cited but not listed; lessons, paragraphs and sentences that are too long; `[[terms]]` missing from the glossary; quiz answers whose "proof" sentence is not in the lesson or does not say the answer; broken lesson, section, glossary and file links; files outside the course folder; figures without useful alt text; SVG content the build would strip; an accent colour too pale to read. It prints every claim marked `confirm` (not traced to a source) for a person to check, and `course build --strict` refuses to build while any remain. "Claim" has an exact meaning here, listed under "Lint rules": it is a pattern match, not an understanding of the text.
+- **A built site** that is plain HTML, two small stylesheets (the layout and the generated theme colours), two self-hosted font families and a few small ES modules (17 KB of script gzipped, 9 KB of CSS gzipped for the example). Every page carries a Content Security Policy that only allows the site's own script files (no inline scripts or event handlers) and only loads styles, fonts, images, sound and video from the site itself:
   - index with lessons, minutes, progress, "continue" and a reset
   - lesson pages with a contents rail (it folds shut on phones and ticks off what you have read), "Listen" on every section, "Listen to the lesson" as a queue with skip and stop, the line being read highlighted, a voice on/off switch and a note that the voice is computer-generated
   - glossary terms underlined the first time they appear, with a popover (mouse, touch and keyboard; Escape closes it)
@@ -22,8 +22,8 @@ It is packaged as a [Claude Code](https://claude.com/claude-code) skill (`SKILL.
   - light and dark themes (follows the system, with a switch), reduced motion respected, works from 320 px wide, keyboard accessible
   - reading progress and quiz scores kept in the browser's local storage, nothing sent anywhere
   - relative links only, so it works in a sub-folder (for example a GitHub Pages project site) as well as at a domain's root
-- **A verify step** for the built site: every link and anchor resolves, nothing loads from another server, page and asset sizes, every narrated line on every page has its recording (found by hashing the page text exactly as the player does), no empty, short or silent recordings, and accessibility basics (lang, title, one h1, heading order, alt text, labels, button and link names, duplicate ids, captions on video).
-- **`examples/how-rain-forms/`**, a 3-lesson course written for this repository from public USGS and UCAR pages, with its narration (51 lines, 252 seconds, 983 KB) and its built site in `dist/`.
+- **A verify step** for the built site: every link and anchor resolves (including each quiz question's link to its proving sentence), no `javascript:`, `data:` or `file:` address, nothing loads from another server, page and asset sizes, every narrated line on every page has its recording (found by hashing the page text exactly as the player does), no empty, short or silent recordings, and accessibility basics (lang, title, one h1, heading order, alt text, labels, button and link names, duplicate ids, captions on video).
+- **`examples/how-rain-forms/`**, a 3-lesson course written for this repository from public USGS and UCAR pages, with its narration (50 lines, 245 seconds, 956 KB) and its built site in `dist/`.
 
 ## Limits
 
@@ -34,14 +34,14 @@ It is packaged as a [Claude Code](https://claude.com/claude-code) skill (`SKILL.
 - **Search is word matching**, not a language model. It finds words (with small typos and the start of the last word), not meanings.
 - **It needs to be served over HTTP.** Opened from disk as `file://`, the pages and their text read fine, but browsers refuse to run the page's ES modules there, so read-aloud, the quiz, glossary popovers, search and progress do not work. Use `course serve` locally, or any static host.
 - **Lesson video is optional and simple**: a title card, the lesson's section titles over the recap, and a closing card, made by reel-studio. It is not a filmed or illustrated video.
-- English text handling (sentence splitting, word stems in search). Other languages build, but search and the length checks are cruder.
+- **English first.** Sentence splitting (used for the sentence-length check) expects English punctuation and capitals, search trims English word endings only, and the claim check knows English number words only. Text in other scripts builds and is searchable as whole words: Cyrillic, Greek and other spaced scripts match whole words (no stemming; a different inflection does not match); Chinese, Japanese, Korean and Thai, which have no spaces, match any run of characters that contains the typed text. Lesson, section and glossary ids made from titles with no Latin letters are a short hash (`s-1a2b3c`), stable as long as the title does not change. Right-to-left layout is not handled.
 - Tested on Linux only (see "What was tested").
 
 ## Requirements
 
 | Needed | Why | Licence |
 |---|---|---|
-| Node.js 18 or newer | runs the command line, the build and the tests | MIT |
+| Node.js 18.17 or newer | runs the command line, the build and the tests | MIT |
 | [site-narrator](https://github.com/VinVirtual/site-narrator) | records the narration (`course narrate`) and provides the browser player | MIT |
 | what site-narrator needs: Python 3.10+, kokoro-onnx, the Kokoro v1.0 model files, an MP3 encoder (lameenc or ffmpeg) | text to speech | see site-narrator's README: kokoro-onnx MIT, Kokoro-82M Apache-2.0, phonemizer and espeak-ng GPL-3.0-or-later, lameenc LGPL-3.0-or-later |
 | [reel-studio](https://github.com/VinVirtual/reel-studio) (optional) | short lesson videos (`course video`) | MIT; it needs Chrome or Chromium, playwright-core and ffmpeg, see its README |
@@ -55,7 +55,7 @@ Without site-narrator, `course build` still makes the site, with the Listen butt
 Checked on 21 November 2026. Check again before you rely on them. This is a summary, not legal advice.
 
 - **Bundled fonts** (`site/fonts/`): Instrument Serif (Copyright 2022 The Instrument Serif Project Authors) and Instrument Sans (Copyright 2022 The Instrument Sans Project Authors), both under the **SIL Open Font License 1.1**, as stated in the licence and copyright fields inside each font file. Neither declares a Reserved Font Name. The files here are subsets (Latin characters and common punctuation) converted to WOFF2 with fontTools. `site/fonts/OFL.txt` carries the notices and travels with the fonts into every built site.
-- **site-narrator and reel-studio** are separate projects under the MIT License, called through their command lines. Their own dependencies have their own licences, listed in their READMEs. Every built site includes a copy of site-narrator's `player/player.js` (MIT) as `assets/js/player.js`; the example's `dist/` does too.
+- **site-narrator and reel-studio** are separate projects under the MIT License, called through their command lines. Their own dependencies have their own licences, listed in their READMEs. Every built site includes a copy of site-narrator's `player/player.js` (MIT) as `assets/js/player.js`, with site-narrator's licence beside it as `assets/js/player.js.LICENSE.txt`; the example's `dist/` does too.
 - **The recordings in the example** were made with the Kokoro `af_heart` voice through site-narrator. Kokoro-82M is tagged Apache-2.0 on its model card; the voice files have no separate licence that could be checked.
 - **The example course text and figures** were written and drawn for this repository. Its facts come from the U.S. Geological Survey's Water Science School pages and the UCAR Center for Science Education page listed in each lesson; the text paraphrases them and does not copy them.
 - **Courses you make** are yours. Check the licences of the sources you quote and the images you add.
@@ -118,12 +118,12 @@ $C verify ~/.claude/skills/course-studio/examples/how-rain-forms
 | Command | What it does |
 |---|---|
 | `course check` | checks Node, finds site-narrator (and runs `narrate check`) and reel-studio, and says how to fix what is missing |
-| `course new <dir>` | copies the template course into `<dir>` (refuses if it already holds a `course.json`) |
+| `course new <dir>` | copies the template course into `<dir>`, which must be new or empty (it never overwrites files) |
 | `course lint [dir]` | checks the course (see "Lint rules"), prints the claims to confirm, exits non-zero on errors. `--strict` fails on warnings, `--json` prints JSON |
 | `course narrate [dir]` | runs lint, writes `voice-lines.json` and `narrate.json`, then `narrate record` (2 workers) and `narrate verify`. Only new and changed lines are recorded; recordings of removed lines are deleted. `--dry-run` shows the plan, `--force` records everything |
 | `course video [dir] [lesson ...]` | optional: writes a reel-studio project in `<dir>/video/` and renders a short landscape video per lesson (or the ones named) with its web copy, poster and captions. `course build` then adds them to the lesson pages |
-| `course build [dir]` | writes the site to `<dir>/dist` (`--out` elsewhere). Refuses when lint has errors; `--force` builds anyway |
-| `course serve [dir]` | serves the built site on `http://127.0.0.1:4180` (`--port N`). Local use only: it listens on this machine, answers only `localhost` requests and refuses dot-files |
+| `course build [dir]` | writes the site to `<dir>/dist` (`--out` elsewhere). Refuses when lint has errors (`--force` builds anyway). `--strict` refuses while any claim is still marked `confirm`: use it for the build you publish. The output folder may not be the course folder or a folder containing it, and a non-empty folder is only replaced when it holds a previous `course build` (its `build.json`). The site is built in a temporary folder next to it and swapped in only when the build succeeds |
+| `course serve [dir]` | serves the built site on `http://127.0.0.1:4180` (`--port N`, 0 to 65535). Local use only: it listens on this machine, answers only `localhost` requests and refuses dot-files. Supports single byte ranges (`bytes=a-b`, `bytes=a-`, `bytes=-n`), answers 416 for impossible ones |
 | `course verify [dir]` | checks the built site (see "What verify checks"), prints sizes and narration totals, exits non-zero on errors. `--no-voice` when the course has no narration, `--out` for another folder, `--json` |
 | `course test` | runs the unit tests (plain `node --test`, no extra packages) |
 
@@ -149,7 +149,7 @@ my-course/
 | `title`, `subtitle`, `audience`, `author`, `language` | shown on the index; `language` is the page's `lang` (default `en`) |
 | `lessons` | the lesson files, in reading order |
 | `glossary` | the glossary file (default `glossary.json` when it exists) |
-| `theme` | `{ "preset": "paper" | "ink" | "moss", "accent": "#1f6f8b" }`: warm newsprint with clay red, cool blue-grey with cobalt, or lichen green; `accent` overrides the accent colour |
+| `theme` | `{ "preset": "paper" | "ink" | "moss", "accent": "#175a72" }`: warm newsprint with clay red, cool blue-grey with cobalt, or lichen green; `accent` overrides the accent colour |
 | `voice` | `{ "voice": "af_heart", "speed": 0.96, "say": { "NOAA": "Noah" }, "lang": "en-us", "bitrate": 32 }`, passed to site-narrator |
 | `limits` | `{ "lessonWords": 1400, "paragraphWords": 120, "sentenceWords": 35, "recapLines": 6 }` for lint |
 | `video` | options for `course video`: `format` (`embed` by default, or `landscape`, `square`, `vertical`), `music` (false), `captions` (true), `speed`, `workers` (2) |
@@ -192,13 +192,13 @@ Block types and their fields (every block except `heading` and `code` takes `cit
 | `code` | `text`, `lang`, `caption` | no |
 | `quote` | `text`, `by` | the text |
 
-`takeaways` are shown as a list. `recap` lines are read with "Play the recap". `quiz[].proof` is a sentence copied from the lesson. A source needs `id`, `title` and `url` (or `citation` for something with no address); `publisher` and `accessed` are shown when given. `"confirm": "why"` on a block marks a claim the writer could not trace to a source: lint lists it for a person to check.
+`takeaways` are shown as a list. `recap` lines are read with "Play the recap". `quiz[].proof` is a sentence copied from the lesson. A source needs `id`, `title` and `url` (or `citation` for something with no address); `publisher` and `accessed` are shown when given. `"confirm": "why"` on a block marks a claim the writer could not trace to a source; the reason must be a non-empty text. Lint lists these for a person to check, and `build --strict` refuses while any remain.
 
-Inline markup in any text: `[[term]]`, `[[shown|term]]`, `[label](https://...)`, `[label](lesson:id)`, `[label](lesson:id#section-id)`, `[label](glossary:term)`, `[label](#section-id)`, `[label](handout.pdf)` (a file in the course folder, copied into the site), and `\[` `\]` for literal brackets. Glossary terms are also found and underlined automatically the first time they appear in a lesson.
+Inline markup in any text: `[[term]]`, `[[shown|term]]`, `[label](https://...)`, `[label](lesson:id)`, `[label](lesson:id#section-id)`, `[label](glossary:term)`, `[label](#section-id)`, `[label](files/handout.pdf)` (a regular file inside the course folder, copied into the site; absolute paths, `..` that leaves the folder, hidden files and folders are refused). Link targets may contain balanced parentheses, and `\[` `\]` for literal brackets. Glossary terms are also found and underlined automatically the first time they appear in a lesson.
 
 ### Figures
 
-SVG figures are inlined into the page and use classes instead of colours, so they follow the theme: fills `c-ink`, `c-soft`, `c-faint`, `c-accent`, `c-paper`, `c-sunk`, `c-rule`, `c-tint`, `c-good`; strokes `s-ink`, `s-soft`, `s-accent`, `s-rule`; text `t-serif`, `t-soft`, `t-accent`. Scripts, event handlers, external references and `foreignObject` are rejected by lint and stripped when inlining. PNG, JPEG, WebP and AVIF are copied into the site and need `width` and `height`.
+SVG figures are inlined into the page and use classes instead of colours, so they follow the theme: fills `c-ink`, `c-soft`, `c-faint`, `c-accent`, `c-paper`, `c-sunk`, `c-rule`, `c-tint`, `c-good`; strokes `s-ink`, `s-soft`, `s-accent`, `s-rule`; text `t-serif`, `t-soft`, `t-accent`. The SVG is parsed and written back with an allowlist: shapes (`path`, `rect`, `circle`, `ellipse`, `line`, `polyline`, `polygon`), `text`, `tspan`, `g`, `defs`, `use`, `symbol`, `marker`, gradients, `clipPath`, `mask`, `pattern`, `title` and `desc`, with geometry and presentation attributes. Everything else is removed, including `script`, `style` elements and `style` attributes, `foreignObject`, `image`, `a`, `animate`, `set`, every attribute starting with `on`, any `href` that is not a `#fragment`, and any `url()` that is not `url(#id)`. Text is re-escaped, so markup cannot be reassembled from pieces. Lint lists what would be removed as an `unsafe-svg` error, so the file can be cleaned instead of silently changed. PNG, JPEG, WebP and AVIF are copied into the site and need `width` and `height`.
 
 ## Lint rules
 
@@ -206,23 +206,25 @@ SVG figures are inlined into the page and use classes instead of colours, so the
 |---|---|---|
 | `shape` | error | a missing or unknown field, an unknown block type, a quiz `answer` out of range |
 | `no-sources`, `unknown-source`, `bad-source-url` | error | a lesson with no sources, a `cite` id not in the lesson's sources, a source URL that is not http(s) |
-| `uncited-claim` | error | a block with a digit, a percentage, a quantity word (hundreds, millions...) or research wording (study, research, survey, according to, on average, estimated) and no `cite` |
-| `unconfirmed-claim` | warning | the same, marked `confirm`: listed for the user |
+| `uncited-claim` | error | a prose block with a claim and no `cite`; or a heading, lesson summary, takeaway, recap line, quiz question, right quiz answer, glossary definition, course title or subtitle with a claim that no cited block states (each number, number word and research word must appear in a cited block: of the same lesson, or of any lesson for the glossary and course). A claim is: a digit, `%`, the number words ten to nineteen and twenty to ninety, hundred, thousand, million, billion, trillion, dozen (and plurals), half, halves, twice, thrice, double, triple, quarter, percent or per cent, or the words study, studies, research, researchers, survey, according to, on average, estimate(d), "scientists found/say/estimate". "one" to "nine" are not counted. Wrong quiz options are not checked |
+| `unconfirmed-claim` | warning | a prose block with a claim and no `cite`, marked `confirm`: listed for the user, and `build --strict` fails |
 | `uncited`, `unused-source` | warning | prose with no citation, a source nobody cites |
 | `lesson-too-long`, `paragraph-too-long`, `sentence-too-long`, `recap-too-long` | warning | past the `limits` |
 | `no-recap`, `no-takeaways`, `no-quiz` | warning | a lesson without them |
 | `undefined-term`, `unknown-lesson` | error | a `[[term]]` not in the glossary, a glossary entry pointing at a lesson that does not exist |
 | `unused-term` | warning | a glossary entry that no lesson uses |
-| `proof-not-found` | error | a quiz `proof` that is not a sentence of the lesson (quote style, dashes and white space are ignored) |
+| `proof-not-found` | error | a quiz `proof` that is not in the lesson text (quote style, dashes, `…` versus `...` and white space are ignored) |
 | `answer-not-in-proof` | warning | less than half of the right answer's words are in the proof or the question |
 | `duplicate-option` | error | two quiz options are the same |
-| `broken-link` | error | a lesson, section, glossary term, anchor or file that does not exist, or a scheme other than https, http, mailto, lesson, glossary |
-| `missing-image`, `remote-image`, `unsafe-svg`, `image-type` | error | a figure file that is missing, on another server, contains scripts or event handlers, or is not SVG, PNG, JPEG, WebP, AVIF or GIF |
+| `broken-link` | error | a lesson, section, glossary term or anchor that does not exist; a file that is missing, a folder, hidden, absolute or outside the course folder; or a scheme other than https, http, mailto, lesson, glossary |
+| `missing-image`, `remote-image`, `unsafe-svg`, `image-type` | error | a figure file that is missing or not a regular file inside the course folder, on another server, holds anything the SVG allowlist would remove (listed in the message), or is not SVG, PNG, JPEG, WebP, AVIF or GIF |
+| `accent-contrast` | warning | a `theme.accent` under 4.5:1 against the light backgrounds (the dark-theme accent is derived automatically to reach 4.5:1) |
 | `weak-alt`, `alt-is-caption`, `image-size` | warning | alt text that is short or generic or repeats the caption, a raster image without dimensions |
 
 ## What verify checks
 
-- every `href`, `src` and `poster` in the built pages resolves to a file inside the site, and every `#anchor` to an element id
+- every `href`, `src` and `poster` in the built pages resolves to a file inside the site, every `#anchor` to an element id, and every quiz question's proof link to a sentence on its page
+- no `href`, `src` or `poster` uses `javascript:`, `vbscript:`, `data:`, `blob:` or `file:` (white space and control characters inside the scheme are ignored, entities are decoded)
 - no script, stylesheet, image, video or font is loaded from another server (links to sources are fine), including `url()` and `@import` in CSS and `fetch()`/`import()` in scripts
 - one page over 200 KB, scripts over 80 KB gzipped, CSS over 30 KB gzipped (warnings)
 - every `[data-line]` element's text has `voice/<hash>.mp3`; recordings under 1.5 KB, shorter than 0.3 s or silent by the manifest's level are errors; recordings no page uses are warnings
@@ -239,12 +241,12 @@ SVG figures are inlined into the page and use classes instead of colours, so the
 
 On one Linux machine (Node 24, Google Chrome headless through Playwright, site-narrator with kokoro-onnx and the ffmpeg encoder):
 
-- `course test`: 63 unit tests for inline markup parsing, the voice hash (also against the installed site-narrator player), loading and shape checks, sections and spoken lines, every lint rule, glossary marking, quiz proof matching, rendering and nesting of marks, link resolution, the HTML scanner, search (typos, prefixes, ranking, snippets), progress storage, link and anchor checking, third-party detection, accessibility checks, narration checks, the local server's path rules, and full builds of the example with and without site-narrator.
-- The example was linted (0 errors, 0 warnings, one claim listed to confirm), narrated (51 lines, 252 s, 983 KB; `narrate verify` ok), built and verified (`ok`).
-- The built example was opened in headless Chrome at 1440, 768, 390 and 320 px wide in light and dark: no horizontal overflow, no console errors, no request to any other origin. In the browser: a glossary popover opened by click and by keyboard (focus moved into it, Tab reached its link, Escape closed it and returned focus); a section's Listen read its heading and paragraph in order with the line highlighted; "Listen to the lesson" queued all sections, "Next section" skipped to the next one, the voice switch and Stop worked; the recap played its three lines; the quiz gave "right" and "not quite" feedback, the score was saved, and the proof link focused and highlighted the sentence; search found "Coalescence" from the typo "coalesense" and arrow keys moved through the results; reading to the end marked the lesson read, and the index showed it with the quiz score and pointed "Continue" at the first unread lesson; the theme choice survived a reload; reduced motion shortened transitions.
+- `course test`: 97 unit tests for inline markup parsing (including decomposed Unicode and parentheses in links), SVG sanitising against known attacks, output-folder safety and staged builds, byte ranges in the local server, paths outside the course folder, claims outside blocks, theme contrast, progress keys, non-Latin slugs and search, the voice hash (also against the installed site-narrator player), loading and shape checks, sections and spoken lines, every lint rule, glossary marking, quiz proof matching, rendering and nesting of marks, link resolution, the HTML scanner, search (typos, prefixes, ranking, snippets), progress storage, link and anchor checking, third-party detection, accessibility checks, narration checks, the local server's path rules, and full builds of the example with and without site-narrator.
+- The example was linted (0 errors, 0 warnings, one claim listed to confirm), narrated (50 lines, 245 s, 956 KB; `narrate verify` ok), built and verified (`ok`).
+- The built example was opened in headless Chrome at 1440, 768, 390 and 320 px wide in light and dark: no horizontal overflow, no console errors (so no Content Security Policy violations), no request to any other origin. In the browser: a glossary popover opened by click and by keyboard (focus moved into it, Tab reached its link, Escape closed it and returned focus); a section's Listen read its heading and paragraph in order with the line highlighted; "Listen to the lesson" queued all sections, "Next section" skipped to the next one, the voice switch and Stop worked; the recap played its three lines; the quiz gave "right" and "not quite" feedback, the score was saved, and the proof link focused and highlighted the sentence; search found "Coalescence" from the typo "coalesense" and arrow keys moved through the results; reading to the end marked the lesson read, and the index showed it with the quiz score and pointed "Continue" at the first unread lesson; the theme choice survived a reload; reduced motion shortened transitions.
 - `course video` was run on one lesson of a copy of the example: reel-studio rendered a 25.6 s 1280×720 web copy with captions and a poster (563 KB, mean volume −23.1 dB), `course build` added it to the lesson page with a captions track, and it played in headless Chrome. It is not part of the committed example.
 
-Not tested: macOS and Windows; Firefox and Safari; real phones and screen readers; a real static host (only the local server); languages other than English. Nobody has listened to the recordings as part of these checks: listen to yours.
+Not tested: macOS and Windows; Firefox and Safari; real phones and screen readers; a real static host (only the local server); real courses in languages other than English (non-Latin slugs and search are covered by unit tests only). Nobody has listened to the recordings as part of these checks: listen to yours.
 
 ## Development
 

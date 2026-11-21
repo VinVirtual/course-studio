@@ -38,9 +38,9 @@ Say these to the user before starting if they matter:
 The course is only as trustworthy as these rules. Follow all of them.
 
 1. **Write from the user's sources only.** Read the sources first. Every fact in a lesson must come from one of them. Do not fill gaps from memory, even when you are sure.
-2. **Cite.** Every lesson lists its `sources` (title, publisher, URL or a `citation` for print, `accessed` date). Every paragraph, list, callout, example, quote and figure has `"cite": ["source-id"]`. `course lint` makes any block with a number, percentage, quantity or "studies/research" wording an error until it cites a source.
+2. **Cite.** Every lesson lists its `sources` (title, publisher, URL or a `citation` for print, `accessed` date). Every paragraph, list, callout, example, quote and figure has `"cite": ["source-id"]`. `course lint` makes it an error when a prose block with a digit, a percentage, a number word from ten upward, a fraction or multiple word (half, twice, double...) or research wording (study, research, survey, according to...) cites no source, and when a heading, summary, takeaway, recap line, quiz question or right answer, glossary definition or subtitle states such a number or word that no cited block states. It is a pattern check: it cannot tell whether the source really says it, so you still check that yourself.
 3. **Never invent facts, figures, statistics, dates, names or quotations.** Quotes are copied exactly. Numbers are copied exactly, with their units.
-4. **When you cannot trace a claim to a source**, either leave it out or keep it with `"confirm": "why it needs checking"` on the block. `course lint` prints every such block under "To confirm with the user". **Show that list to the user** and do not call the course finished until they have answered it.
+4. **When you cannot trace a claim to a source**, either leave it out or keep it with `"confirm": "why it needs checking"` on the block (a non-empty reason). `course lint` prints every such block under "To confirm with the user". **Show that list to the user.** Once they answer, cite a source or remove the claim, then drop `confirm`. `course build --strict` refuses to build while any `confirm` remains: use it for the build that gets published.
 5. **Plain language.** Short sentences (lint warns past 35 words), one idea per paragraph (past 120 words), a lesson a reader finishes in one sitting (past 1,400 words, split it). Explain a term the first time it is used and add it to the glossary.
 6. **Quiz questions test the lesson, not trivia.** Each question has a `proof`: a sentence copied exactly from the lesson that shows the answer. Lint fails when the sentence is not in the lesson, and warns when the sentence does not say the answer. Wrong options must be clearly wrong from the lesson, not trick questions.
 7. **Figures are explanations.** Draw original SVG diagrams (see "Figures") or use the user's images. Alt text says what the picture shows; the caption says what to notice. Never use an image the user has not supplied or that you cannot license.
@@ -54,7 +54,7 @@ The course is only as trustworthy as these rules. Follow all of them.
 5. **Lint**: `$C/course lint <dir>`. Fix every error. Read every warning. Show the user the "To confirm" list.
 6. **Narrate**: `$C/course narrate <dir> --dry-run`, then without `--dry-run`. It writes `voice-lines.json` and `narrate.json`, records new and changed lines into `<dir>/voice/` with 2 workers, and runs `narrate verify`. Add pronunciations the voice will get wrong to `course.json` `voice.say` (`"NOAA": "Noah"`), then narrate again (only lines containing them are redone).
 7. **Optional video**: `$C/course video <dir> [lesson-id ...]` makes a short landscape video per lesson with reel-studio (title, the lesson's section titles over the recap, a closing card). Only text already in the lesson is used. It takes minutes per lesson; ask first.
-8. **Build**: `$C/course build <dir>`. It refuses when lint has errors (`--force` overrides; do not use it to hide problems).
+8. **Build**: `$C/course build <dir>` while drafting, `$C/course build <dir> --strict` for the version that gets published. It refuses when lint has errors (`--force` overrides; do not use it to hide problems). Keep the output in `<dir>/dist` or a new folder: it refuses the course folder, any folder containing it, and a non-empty folder it did not build.
 9. **Verify**: `$C/course verify <dir>` must end in `ok`. It checks every link and anchor, that nothing loads from another server, page and asset sizes, that every narrated line on every page has a recording (by hashing the page text exactly as the player does), that recordings are not empty, short or silent, and accessibility basics (lang, one h1, heading order, alt text, labels, button and link names, duplicate ids).
 10. **Look at it**: `$C/course serve <dir>` and open it in a headless browser (playwright-cli) at 1440, 768, 390 and 320 px, light and dark. Read the screenshots. Click a glossary term, answer a quiz question and follow its proof link, search with a typo, press Listen and confirm lines highlight in order with no `missing` warnings in the console. Fix what is wrong and build again.
 11. **Deliver**: tell the user what was built (lessons, terms, questions, narration seconds and size), the "To confirm" list, the voice used and that they need to listen to it, and that `dist/` can be uploaded to any static host as is.
@@ -69,11 +69,11 @@ SVG files are inlined into the page so they follow the light and dark theme. Use
 |---|---|---|
 | `c-ink`, `c-soft`, `c-faint`, `c-accent`, `c-paper`, `c-sunk`, `c-rule`, `c-tint`, `c-good` | `s-ink`, `s-soft`, `s-accent`, `s-rule` (with `stroke-width`) | default is ink in the sans face; `t-serif`, `t-soft`, `t-accent` |
 
-No scripts, event handlers, external links or `<foreignObject>` (lint rejects them). Leave out a background rectangle; the page draws the frame. Give each SVG a `viewBox` and no fixed `width`/`height`. PNG, JPEG, WebP and AVIF need `width` and `height` in the block.
+The build parses each SVG and keeps only plain shapes, text, groups, `defs`/`use`/`symbol`/`marker`, gradients, `clipPath`, `mask`, `pattern`, `title` and `desc`, with geometry and presentation attributes; links only as `#fragment` and `url()` only as `url(#id)`. It drops everything else (scripts, `style`, `foreignObject`, `image`, `a`, `animate`/`set`, every `on...` attribute), and lint reports anything it would drop as `unsafe-svg`: fix the file rather than relying on the strip. Leave out a background rectangle; the page draws the frame. Give each SVG a `viewBox` and no fixed `width`/`height`. PNG, JPEG, WebP and AVIF need `width` and `height` in the block.
 
 ## Inline markup
 
-Inside any text: `[[term]]` or `[[shown|term]]` marks a glossary term (lint fails if it is not in the glossary); `[label](https://...)`, `[label](lesson:id)`, `[label](lesson:id#section-id)`, `[label](glossary:term)`, `[label](#section-id)` or `[label](files/handout.pdf)` (a file in the course folder) make links. Glossary terms are also found and underlined automatically, once per lesson, except in headings and links. Section ids are the heading text in lower case with dashes.
+Inside any text: `[[term]]` or `[[shown|term]]` marks a glossary term (lint fails if it is not in the glossary); `[label](https://...)`, `[label](lesson:id)`, `[label](lesson:id#section-id)`, `[label](glossary:term)`, `[label](#section-id)` or `[label](files/handout.pdf)` (a regular file inside the course folder; paths outside it, absolute or hidden are refused) make links. Glossary terms are also found and underlined automatically, once per lesson, except in headings and links. Section ids are the heading text in lower case with dashes.
 
 ## When something is wrong
 
@@ -88,6 +88,9 @@ Inside any text: `[[term]]` or `[[shown|term]]` marks a glossary term (lint fail
 | Listen buttons are missing | site-narrator was not found at build time, or the lesson has no recordings |
 | Nothing is interactive, or search says it could not load | the site was opened as a `file://` page, where browsers block ES modules. Serve it (`course serve`) or upload it |
 | `third-party` in verify | something loads from another server. Self-host it or remove it |
+| `unsafe-svg` | the SVG holds something the allowlist removes (the message lists it). Delete it from the file |
+| `uncited-claim` on a recap, takeaway, heading or quiz | it repeats a number or claim no cited block states. Say it in a cited block first, or drop the number |
+| build refuses the output folder | it is the course folder, contains it, or is a non-empty folder `course build` did not make. Use `dist/` or a new folder |
 
 ## Honesty
 
