@@ -12,6 +12,12 @@ export const ICONS = {
   check: '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
 
+/**
+ * A second line of defence: the page may only run its own script files (no inline scripts or event
+ * handlers), and may only load styles, fonts, images, sound and video from its own site.
+ */
+export const CSP = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'";
+
 /** JSON safe to put inside a <script type="application/json"> element. */
 export const jsonScript = (id, value) => `<script type="application/json" id="${id}">${JSON.stringify(value).replace(/</g, '\\u003c')}</script>`;
 
@@ -62,6 +68,7 @@ export function page({ course, root, title, description, body, current, data, bo
 <html lang="${escapeHtml(course.language)}">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="${CSP}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(title)}</title>
 <meta name="description" content="${escapeHtml(description)}">
@@ -80,7 +87,7 @@ ${body}
 ${searchDialog}
 ${popover}
 ${playerBar}
-${jsonScript('course-data', { root, ...data })}
+${jsonScript('course-data', { root, title: course.title, ...data })}
 <script type="module" src="${root}assets/js/main.js"></script>
 </body>
 </html>

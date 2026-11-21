@@ -1,8 +1,9 @@
 // HTML for each block type. Every line that can be read aloud sits in its own <span data-line>, whose
 // text content is exactly the recorded line, so the player can hash element.textContent.
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { courseFile } from './files.mjs';
 import { renderInline } from './inline.mjs';
+import { sanitizeSvg } from './svg.mjs';
 import { escapeHtml, plainText } from './text.mjs';
 
 const line = (source, ctx, tag = 'span') => {
@@ -25,27 +26,20 @@ export function citations(ids = [], ctx) {
 
 const CALLOUT_LABEL = { note: 'Note', tip: 'Tip', warning: 'Careful' };
 
-/** An SVG file made safe to inline: no prolog, no doctype, no scripts, hidden from screen readers. */
-export function inlineSvg(svg) {
-  return svg
-    .replace(/<\?xml[\s\S]*?\?>/g, '')
-    .replace(/<!DOCTYPE[\s\S]*?>/gi, '')
-    .replace(/<!--[\s\S]*?-->/g, '')
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/\son[a-z]+\s*=\s*("[^"]*"|'[^']*')/gi, '')
-    .replace(/<svg\b/, '<svg aria-hidden="true" focusable="false"')
-    .trim();
-}
+/** An SVG file made safe to inline (see svg.mjs): allowlisted elements and attributes only. */
+export const inlineSvg = (svg) => sanitizeSvg(svg).svg;
 
 function figure(block, ctx) {
   const caption = `<figcaption>${line(block.caption, ctx)}${citations(block.cite, ctx)}${block.credit ? ` <span class="credit">${escapeHtml(block.credit)}</span>` : ''}</figcaption>`;
-  const file = join(ctx.dir, block.src);
+  const found = courseFile(ctx.dir, block.src);
   let art;
-  if (block.src.toLowerCase().endsWith('.svg') && existsSync(file)) {
-    art = `<div class="fig-art" role="img" aria-label="${escapeHtml(block.alt)}">${inlineSvg(readFileSync(file, 'utf8'))}</div>`;
+  if (found.error) {
+    art = `<div class="fig-art fig-missing" role="img" aria-label="${escapeHtml(block.alt)}"></div>`;
+  } else if (found.rel.toLowerCase().endsWith('.svg')) {
+    art = `<div class="fig-art" role="img" aria-label="${escapeHtml(block.alt)}">${inlineSvg(readFileSync(found.file, 'utf8'))}</div>`;
   } else {
-    const src = ctx.asset ? ctx.asset(block.src) : block.src;
-    const size = block.width && block.height ? ` width="${Number(block.width)}" height="${Number(block.height)}"` : '';
+    const src = ctx.asset ? ctx.asset(found.rel) : found.rel;
+    const size = Number.isInteger(block.width) && Number.isInteger(block.height) ? ` width="${block.width}" height="${block.height}"` : '';
     art = `<div class="fig-art"><img src="${escapeHtml(src)}" alt="${escapeHtml(block.alt)}"${size} loading="lazy" decoding="async"></div>`;
   }
   return `<figure class="fig">${art}${caption}</figure>`;
@@ -61,7 +55,7 @@ export function renderBlock(block, ctx) {
       return `<${tag} class="prose-list">${block.items.map((item) => `<li>${line(item, ctx)}</li>`).join('')}</${tag}>${block.cite?.length ? `<p class="list-cite">${cite()}</p>` : ''}`;
     }
     case 'callout': {
-      const tone = block.tone ?? 'note';
+      const tone = Object.hasOwn(CALLOUT_LABEL, block.tone ?? '') ? block.tone : 'note';
       const title = block.title ? `<p class="callout-title">${line(block.title, ctx)}</p>` : `<p class="callout-title" aria-hidden="true">${CALLOUT_LABEL[tone]}</p>`;
       return `<aside class="callout callout-${tone}" aria-label="${CALLOUT_LABEL[tone]}">${title}<p>${line(block.text, ctx)}${cite()}</p></aside>`;
     }
