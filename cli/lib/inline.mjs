@@ -1,19 +1,18 @@
 // Turns one piece of lesson text into HTML: links, glossary terms and quiz proof sentences, properly nested.
 import { findTerms } from './glossary.mjs';
-import { escapeHtml, looseText, parseInline } from './text.mjs';
+import { escapeHtml, looseFind, parseInline } from './text.mjs';
 
 const PRIORITY = { proof: 0, link: 1, term: 2 };
 
 /** Proof sentences inside this text, each claimed once per lesson (ctx.proofs holds { text, id, used }). */
 function proofMarks(text, proofs = []) {
-  const loose = looseText(text);
   const marks = [];
   for (const proof of proofs) {
     if (proof.used) continue;
-    const at = loose.indexOf(looseText(proof.text));
-    if (at < 0 || loose.length !== text.length) continue;
+    const found = looseFind(text, proof.text);
+    if (!found) continue;
     proof.used = true;
-    marks.push({ kind: 'proof', start: at, end: at + looseText(proof.text).length, id: proof.id });
+    marks.push({ kind: 'proof', start: found.start, end: found.end, id: proof.id });
   }
   return marks;
 }

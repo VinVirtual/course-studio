@@ -2,7 +2,7 @@
 // Shape problems are collected (not thrown) so `course lint` can report all of them at once.
 import { existsSync, readFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
-import { slugify, tidy } from './text.mjs';
+import { slugify, tidy, uniqueIds } from './text.mjs';
 
 export const BLOCK_TYPES = {
   heading: { required: ['text'], optional: [] },
@@ -62,6 +62,7 @@ export function checkBlock(block, where) {
     if (!COMMON.includes(field) && !spec.required.includes(field) && !spec.optional.includes(field)) problems.push({ where, message: `unknown field "${field}" on ${block.type}` });
   }
   if (block.cite !== undefined && !(Array.isArray(block.cite) && block.cite.every(isText))) problems.push({ where, message: '"cite" must be a list of source ids' });
+  if (block.confirm !== undefined && !isText(block.confirm)) problems.push({ where, message: '"confirm" must say why the claim needs checking (a non-empty text)' });
   if (block.tone !== undefined && !CALLOUT_TONES.includes(block.tone)) problems.push({ where, message: `callout tone must be one of ${CALLOUT_TONES.join(', ')}` });
   return problems;
 }
@@ -128,11 +129,12 @@ function loadGlossary(dir, field) {
   const list = Array.isArray(raw) ? raw : raw?.terms;
   if (!Array.isArray(list)) return { glossary: [], problems: [{ where: basename(file), message: 'glossary must be a list of { term, definition }' }], file };
   const problems = [];
+  const unique = uniqueIds();
   const glossary = list.map((entry, index) => {
     const where = `${basename(file)}[${index}]`;
     if (!isText(entry?.term)) problems.push({ where, message: 'needs "term"' });
     if (!isText(entry?.definition)) problems.push({ where, message: 'needs "definition"' });
-    return { term: tidy(entry?.term), aliases: (entry?.aliases ?? []).map(tidy), definition: tidy(entry?.definition), lesson: entry?.lesson ?? null, cite: entry?.cite ?? [], id: slugify(entry?.term ?? `term-${index}`) };
+    return { term: tidy(entry?.term), aliases: (entry?.aliases ?? []).map(tidy), definition: tidy(entry?.definition), lesson: entry?.lesson ?? null, cite: entry?.cite ?? [], id: unique(slugify(entry?.term) || `term-${index + 1}`) };
   });
   return { glossary, problems, file };
 }
@@ -148,7 +150,7 @@ export function loadCourse(target = '.') {
   for (const field of Object.keys(raw)) if (!COURSE_FIELDS.includes(field)) problems.push({ where: 'course.json', message: `unknown field "${field}"` });
   const theme = { preset: 'paper', ...(raw.theme ?? {}) };
   if (!THEME_PRESETS.includes(theme.preset)) problems.push({ where: 'course.json theme', message: `preset must be one of ${THEME_PRESETS.join(', ')}` });
-  if (theme.accent && !/^#[0-9a-f]{6}$/i.test(theme.accent)) problems.push({ where: 'course.json theme', message: 'accent must be a colour like #1f6f8b' });
+  if (theme.accent && !/^#[0-9a-f]{6}$/i.test(theme.accent)) problems.push({ where: 'course.json theme', message: 'accent must be a colour like #175a72' });
 
   const lessons = [];
   (raw.lessons ?? []).forEach((path, index) => {

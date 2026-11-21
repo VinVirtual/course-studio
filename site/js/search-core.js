@@ -11,6 +11,7 @@ export const fold = (text) =>
   String(text ?? '')
     .normalize('NFKD')
     .replace(/[̀-ͯ]/g, '')
+    .normalize('NFC')
     .toLowerCase()
     .replace(/[’']/g, '');
 
@@ -22,11 +23,16 @@ export function stem(word) {
 }
 
 /** Meaningful words of a text, stemmed. */
+const LATIN = /^[a-z0-9]+$/;
+// Scripts written without spaces between words: a typed word may match inside a longer run.
+const UNSPACED = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}\p{Script=Thai}]/u;
+
+/** Meaningful words of a text: letters and digits of any script, lower-cased; English endings trimmed. */
 export const wordsOf = (text) =>
   fold(text)
-    .split(/[^a-z0-9]+/)
-    .filter((word) => word.length > 1 && !STOP.has(word))
-    .map(stem);
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter((word) => (word.length > 1 || UNSPACED.test(word)) && !STOP.has(word))
+    .map((word) => (LATIN.test(word) ? stem(word) : word));
 
 /** Single-letter edits between two words, giving up past `limit`. */
 export function editDistance(a, b, limit = 2) {
@@ -53,6 +59,7 @@ function matchWord(word, words, isLast) {
   if (words.has(word)) return 1;
   let best = 0;
   for (const other of words) {
+    if (UNSPACED.test(word) && other.includes(word)) best = Math.max(best, 0.8);
     if (isLast && word.length >= 2 && other.startsWith(word)) best = Math.max(best, 0.8);
     else if (best < 0.6 && allowedTypos(word) && editDistance(word, other, allowedTypos(word)) <= allowedTypos(word)) best = 0.6;
   }
@@ -64,8 +71,9 @@ export function snippet(text, query, width = 140) {
   const typed = wordsOf(query);
   const tokens = [...String(text).matchAll(/[\p{L}\p{N}'’]+/gu)];
   const hit = tokens.find((token) => {
-    const word = stem(fold(token[0]));
-    return typed.some((wanted) => word === wanted || word.startsWith(wanted) || (allowedTypos(wanted) && editDistance(wanted, word, 1) <= 1));
+    const folded = fold(token[0]);
+    const word = LATIN.test(folded) ? stem(folded) : folded;
+    return typed.some((wanted) => word === wanted || word.startsWith(wanted) || (UNSPACED.test(wanted) && word.includes(wanted)) || (allowedTypos(wanted) && editDistance(wanted, word, 1) <= 1));
   });
   if (!hit) return { before: String(text).slice(0, width), match: '', after: '' };
   const from = Math.max(0, hit.index - Math.floor(width / 3));

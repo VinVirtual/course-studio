@@ -2,8 +2,8 @@
 import { emptyProgress, lessonStatus, nextLesson, parseProgress, progressKey, readCount, withQuiz, withRead, withSection } from './progress-core.js';
 import { readJson, writeJson } from './store.js';
 
-export function createProgress(course) {
-  const key = progressKey(course);
+export function createProgress(course, title, basePath) {
+  const key = progressKey(course, title, basePath);
   const listeners = new Set();
   let state = parseProgress(readJson(key, emptyProgress()));
   const save = (next) => {

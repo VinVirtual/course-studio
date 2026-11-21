@@ -1,6 +1,23 @@
 // Read progress, kept as one small JSON object per course. Pure functions, so they can be unit-tested.
 
-export const progressKey = (course) => `course-studio:${course}:progress`;
+/** A short FNV-1a hash in hex. */
+export function shortHash(text) {
+  let hash = 0x811c9dc5;
+  for (const char of String(text)) {
+    hash ^= char.codePointAt(0);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+  return hash.toString(16).padStart(8, '0').slice(0, 6);
+}
+
+/**
+ * Where a course keeps its progress. Two courses on one site (or two copies of one course in different
+ * folders) must not share it, so the key holds the slug plus a hash of the title and the site's base path.
+ */
+export const progressKey = (course, title = '', basePath = '/') => `course-studio:${course || 'course'}-${shortHash(`${title}\n${basePath}`)}:progress`;
+
+/** The site's root path, from the page address and the page's relative way back to the root. */
+export const basePathOf = (root, href) => new URL(root || './', href).pathname;
 
 export function emptyProgress() {
   return { read: {}, sections: {}, quiz: {} };

@@ -14,27 +14,71 @@ export function voiceKey(text) {
   return hash.toString(16).padStart(8, '0') + line.length.toString(16);
 }
 
-export const slugify = (text) =>
-  String(text)
+/** A short stable hash of any text, used where a readable slug cannot be made. */
+export const shortHash = (text) => voiceKey(String(text ?? '')).slice(0, 6);
+
+/**
+ * A URL- and id-safe slug. Latin letters are kept (accents dropped); text with no Latin letters or
+ * digits (Cyrillic, CJK, ...) gets "s-" plus a short hash of the text, so it is never empty and stays stable.
+ */
+export function slugify(text) {
+  const slug = String(text ?? '')
     .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[’']/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
+  return slug || (tidy(text) ? `s-${shortHash(tidy(text))}` : '');
+}
+
+/** Makes ids unique by numbering repeats: a, a-2, a-3. */
+export function uniqueIds() {
+  const used = new Map();
+  return (base) => {
+    const count = (used.get(base) ?? 0) + 1;
+    used.set(base, count);
+    return count > 1 ? `${base}-${count}` : base;
+  };
+}
 
 const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 export const escapeHtml = (text) => String(text ?? '').replace(/[&<>"']/g, (char) => HTML_ESCAPES[char]);
 
 export const countWords = (text) => (tidy(text).match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu) ?? []).length;
 
-/** Straight quotes and dashes, so a proof sentence typed with " matches a lesson written with “. */
-export const looseText = (text) =>
-  tidy(text)
-    .replace(/[“”«»„]/g, '"')
-    .replace(/[‘’‚]/g, "'")
-    .replace(/[–—]/g, '-')
-    .replace(/…/g, '...');
+const LOOSE = { '“': '"', '”': '"', '«': '"', '»': '"', '„': '"', '‘': "'", '’': "'", '‚': "'", '–': '-', '—': '-', '…': '...' };
+
+/**
+ * Straight quotes, plain dashes and "..." for "…", so a proof typed with " matches a lesson written
+ * with “. Returns the loose text and, for each of its characters, the offset in the original text.
+ */
+export function looseMap(text) {
+  const source = String(text ?? '');
+  let loose = '';
+  const map = [];
+  for (let index = 0; index < source.length; index += 1) {
+    const out = LOOSE[source[index]] ?? source[index];
+    for (const char of out) {
+      loose += char;
+      map.push(index);
+    }
+  }
+  map.push(source.length);
+  return { loose, map };
+}
+
+export const looseText = (text) => looseMap(tidy(text)).loose;
+
+/** Where `needle` sits in `text`, ignoring quote, dash and ellipsis style: { start, end } in text, or null. */
+export function looseFind(text, needle) {
+  const wanted = looseText(needle);
+  if (!wanted) return null;
+  const { loose, map } = looseMap(text);
+  const at = loose.indexOf(wanted);
+  if (at < 0) return null;
+  return { start: map[at], end: map[at + wanted.length - 1] + 1 };
+}
 
 /** Splits plain text into sentences. Good enough for prose; abbreviations like "e.g." may split early. */
 export function sentences(text) {
@@ -52,7 +96,8 @@ export function sentences(text) {
  * Returns the plain text a reader sees (and a narrator speaks) plus the marks over it.
  */
 export function parseInline(source) {
-  const input = String(source ?? '');
+  // NFC first, so every offset below is an offset into the text the reader sees.
+  const input = String(source ?? '').normalize('NFC');
   let text = '';
   const marks = [];
   let index = 0;
@@ -77,7 +122,7 @@ export function parseInline(source) {
     if (char === '[') {
       const close = findClose(input, index);
       if (close > 0 && input[close + 1] === '(') {
-        const paren = input.indexOf(')', close + 2);
+        const paren = findParen(input, close + 1);
         if (paren > close + 1) {
           const label = input.slice(index + 1, close);
           const inner = parseInline(label);
@@ -94,6 +139,19 @@ export function parseInline(source) {
     index += 1;
   }
   return normalise(text, marks);
+}
+
+/** The ")" that closes the "(" at `open`, allowing balanced parentheses inside (Wikipedia-style URLs). */
+function findParen(input, open) {
+  let depth = 0;
+  for (let index = open; index < input.length; index += 1) {
+    if (input[index] === '(') depth += 1;
+    if (input[index] === ')') {
+      depth -= 1;
+      if (depth === 0) return index;
+    }
+  }
+  return -1;
 }
 
 function findClose(input, open) {
@@ -114,7 +172,7 @@ function findClose(input, open) {
 
 /** Folds white space like tidy() and moves the marks with it, so mark offsets match the tidied text. */
 function normalise(raw, marks) {
-  const nfc = raw.normalize('NFC');
+  const nfc = raw; // already NFC: parseInline normalises its input first
   const map = [];
   let text = '';
   let space = false;

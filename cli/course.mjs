@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // course-studio command line. `course help` lists the commands.
 import { spawnSync } from 'node:child_process';
-import { cpSync, existsSync, readdirSync, readFileSync } from 'node:fs';
+import { cpSync, existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { buildCourse } from './lib/build.mjs';
+import { BuildError, buildCourse } from './lib/build.mjs';
 import { CourseError, loadCourse } from './lib/load.mjs';
 import { formatIssues, lintCourse, toConfirm } from './lib/lint.mjs';
 import { runNarrator, writeNarration } from './lib/narrate.mjs';
@@ -31,7 +31,7 @@ reel-studio at ~/.claude/skills/reel-studio (COURSE_REEL overrides).`;
 const FLAGS = {
   lint: { strict: false, json: false },
   narrate: { 'dry-run': false, force: false },
-  build: { out: true, force: false },
+  build: { out: true, force: false, strict: false },
   verify: { out: true, 'no-voice': false, json: false },
   serve: { port: true },
   video: {},
@@ -92,6 +92,13 @@ function build(dir, options) {
       return 1;
     }
   }
+  const confirm = toConfirm(loaded.lessons);
+  if (options.strict && confirm.length) {
+    say(`${count(confirm.length, 'claim')} still marked "confirm" (not traced to a source):`);
+    for (const item of confirm) say(`  - ${item.where}: "${item.claim}" (${item.why})`);
+    say('\n--strict: confirm them with the user (then cite a source, or remove the claim) before publishing');
+    return 1;
+  }
   buildCourse(loaded, { out: options.out && resolve(options.out), log: say });
   return 0;
 }
@@ -140,7 +147,8 @@ function check() {
     say(`${good ? 'ok  ' : 'MISSING'}  ${label}${!good && hint ? `\n         ${hint}` : ''}`);
     return good;
   };
-  ok = line(Number(process.versions.node.split('.')[0]) >= 18, `node ${process.versions.node} (18 or newer)`, 'install Node.js 18+') && ok;
+  const [major, minor] = process.versions.node.split('.').map(Number);
+  ok = line(major > 18 || (major === 18 && minor >= 17), `node ${process.versions.node} (18.17 or newer)`, 'install Node.js 18.17 or newer') && ok;
   const narrator = line(hasNarrator(), `site-narrator (${narratorHome()})`, 'git clone https://github.com/VinVirtual/site-narrator ~/.claude/skills/site-narrator, or set COURSE_NARRATOR');
   ok = narrator && ok;
   if (narrator) {
@@ -157,7 +165,8 @@ function newCourse(dir) {
   if (!dir) throw new CourseError('usage: course new <dir>');
   const target = resolve(dir);
   if (existsSync(join(target, 'course.json'))) throw new CourseError(`${target} already holds a course.json`);
-  if (existsSync(target) && readdirSync(target).length) say(`note: ${target} is not empty; adding the template files`);
+  if (existsSync(target) && !statSync(target).isDirectory()) throw new CourseError(`${target} is a file, not a folder`);
+  if (existsSync(target) && readdirSync(target).length) throw new CourseError(`${target} is not empty. Use a new or empty folder (course new never overwrites files)`);
   cpSync(TEMPLATES, target, { recursive: true, errorOnExist: true, force: false });
   say(`course ready: ${relative(process.cwd(), target) || '.'}`);
   say('next: put the source material in sources/, write the lessons, then: course lint → course narrate → course build → course verify');
@@ -193,7 +202,9 @@ function main(argv) {
     case 'serve': {
       const folder = existsSync(join(resolve(dir), 'course.json')) ? join(resolve(dir), 'dist') : resolve(dir);
       if (!existsSync(join(folder, 'index.html'))) throw new CourseError(`${folder} has no index.html: run course build first`);
-      serve(folder, { port: Number(options.port ?? 4180), log: say });
+      const port = options.port === undefined ? 4180 : Number(options.port);
+      if (!Number.isInteger(port) || port < 0 || port > 65535 || !/^\d+$/.test(String(options.port ?? 4180))) throw new CourseError(`--port must be a number from 0 to 65535 (got ${options.port})`);
+      serve(folder, { port, log: say });
       return null;
     }
     case 'verify':
@@ -214,7 +225,7 @@ try {
   if (error instanceof CourseError || error.code === 'ENOENT') {
     process.stderr.write(`course: ${error.message}\n`);
     process.exitCode = 2;
-  } else if (error instanceof Error && /not found at|unknown lesson|reel new failed|output folder/.test(error.message)) {
+  } else if (error instanceof BuildError || (error instanceof Error && /not found at|unknown lesson|reel new failed/.test(error.message))) {
     process.stderr.write(`course: ${error.message}\n`);
     process.exitCode = 2;
   } else throw error;

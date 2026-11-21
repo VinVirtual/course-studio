@@ -4,12 +4,25 @@ import { basename, extname, join, resolve } from 'node:path';
 import { blockTexts, sectionsOf } from './blocks.mjs';
 import { findTerms, lookupTerm, termMatcher } from './glossary.mjs';
 import { answerSupport, findProof } from './quiz.mjs';
+import { sanitizeSvg } from './svg.mjs';
+import { MIN_CONTRAST, themeTokens, worstContrast } from './theme.mjs';
+import { courseFile } from './files.mjs';
 import { countWords, parseInline, plainText, sentences, tidy } from './text.mjs';
 
 const issue = (level, rule, where, message) => ({ level, rule, where, message });
 const PROSE = ['paragraph', 'list', 'callout', 'example', 'quote', 'figure'];
-// Things that read as checkable facts: numbers, percentages, quantities, and appeals to research.
-const CLAIM = /\d|%|\b(percent|per cent|hundreds?|thousands?|millions?|billions?|trillions?|dozens?|study|studies|research|researchers|survey|scientists (?:found|say|estimate)|according to|on average|estimated?)\b/i;
+// Things that read as checkable facts. Digits, percentages, number words from ten upward and words for
+// fractions and multiples, quantity words, and appeals to research. "one" to "nine" are left out: they
+// are too common in plain prose ("one idea", "two steps") to mean a statistic.
+const NUMBER_WORDS = 'ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundreds?|thousands?|millions?|billions?|trillions?|dozens?|half|halves|twice|thrice|double|triple|quarter|quarters|percent|per cent';
+const RESEARCH = 'study|studies|research|researchers|survey|scientists (?:found|say|estimate)|according to|on average|estimated?';
+const CLAIM_SOURCE = `\\d|%|\\b(?:${NUMBER_WORDS}|${RESEARCH})\\b`;
+const CLAIM = new RegExp(CLAIM_SOURCE, 'i');
+const CLAIM_ALL = new RegExp(`\\d+(?:[.,]\\d+)?|%|\\b(?:${NUMBER_WORDS}|${RESEARCH})\\b`, 'gi');
+
+/** The claim-like pieces of a text ("90", "%", "millions", "according to"), lower-cased. */
+export const claimTokens = (text) => [...String(text).matchAll(CLAIM_ALL)].map((match) => match[0].toLowerCase().replace(/^per cent$/, 'percent').replace(/^%$/, 'percent'));
+
 const VAGUE_ALT = /^(image|picture|photo|figure|diagram|graphic|illustration|chart|img)\b\.?$/i;
 const SAFE_SCHEMES = /^(https?:|mailto:)/i;
 
@@ -51,6 +64,53 @@ const isHttpUrl = (value) => {
     return false;
   }
 };
+
+/** The claim-like pieces stated by the cited blocks of a lesson: what a recap, quiz or heading may repeat. */
+function citedTokens(lesson) {
+  return new Set(lesson.blocks.filter((block) => (block.cite ?? []).length).flatMap((block) => blockTexts(block).flatMap((text) => claimTokens(plainText(text)))));
+}
+
+/** True when every claim-like piece of `text` is also stated by a cited block. */
+const supportedBy = (text, tokens) => claimTokens(text).every((token) => tokens.has(token));
+
+/**
+ * Text with no "cite" of its own (headings, summary, takeaways, recap, the quiz question and its right
+ * answer) may only repeat numbers and claims that a cited block of the same lesson states.
+ */
+export function lintRestatedClaims(lesson) {
+  const out = [];
+  const corpus = citedTokens(lesson);
+  const file = basename(lesson.file);
+  const check = (where, text) => {
+    const plain = plainText(text ?? '');
+    if (CLAIM.test(plain) && !supportedBy(plain, corpus)) out.push(issue('error', 'uncited-claim', where, `"${excerpt(plain, 0)}" states a number or claim that no cited block of this lesson states`));
+  };
+  check(`${file} summary`, lesson.summary);
+  lesson.blocks.forEach((block, index) => {
+    if (block.type === 'heading') check(where(lesson, index), block.text);
+  });
+  lesson.takeaways.forEach((text, index) => check(`${file} takeaways[${index}]`, text));
+  lesson.recap.forEach((text, index) => check(`${file} recap[${index}]`, text));
+  lesson.quiz.forEach((item, index) => {
+    check(`${file} quiz[${index}].question`, item.question);
+    if (Array.isArray(item.options)) check(`${file} quiz[${index}].answer`, item.options[item.answer]);
+  });
+  return out;
+}
+
+/** Glossary definitions and the course subtitle may repeat claims stated in any cited lesson block. */
+export function lintCourseClaims(lessons, glossary, course) {
+  const out = [];
+  const corpus = new Set(lessons.flatMap((lesson) => [...citedTokens(lesson)]));
+  const check = (where, text) => {
+    const plain = plainText(text ?? '');
+    if (CLAIM.test(plain) && !supportedBy(plain, corpus)) out.push(issue('error', 'uncited-claim', where, `"${excerpt(plain, 0)}" states a number or claim that no cited lesson block states`));
+  };
+  glossary.forEach((entry) => check(`glossary "${entry.term}"`, entry.definition));
+  check('course.json subtitle', course.subtitle);
+  check('course.json title', course.title);
+  return out;
+}
 
 export function lintLength(lesson, limits) {
   const out = [];
@@ -132,7 +192,7 @@ export function checkLink(href, { lesson, lessons, glossary, dir }) {
   }
   if (href.startsWith('glossary:')) return lookupTerm(termMatcher(glossary).names, href.slice(9)) ? null : `no glossary term "${href.slice(9)}"`;
   if (href.startsWith('#')) return sectionIds(lesson).has(href.slice(1)) ? null : `this lesson has no section "${href.slice(1)}"`;
-  return existsSync(resolve(dir, href.split('#')[0])) ? null : `file not found: ${href}`;
+  return courseFile(dir, href).error ?? null;
 }
 
 export function lintLinks(lesson, context) {
@@ -161,16 +221,16 @@ export function lintFigures(lesson, dir) {
       out.push(issue('error', 'remote-image', at, 'figures must be files in the course folder; the site makes no requests to other servers'));
       return;
     }
-    const file = join(dir, block.src);
-    if (!existsSync(file)) {
-      out.push(issue('error', 'missing-image', at, `file not found: ${block.src}`));
+    const found = courseFile(dir, block.src);
+    if (found.error) {
+      out.push(issue('error', 'missing-image', at, found.error));
       return;
     }
+    const { file } = found;
     const ext = extname(file).toLowerCase();
     if (ext === '.svg') {
-      const svg = readFileSync(file, 'utf8');
-      if (/<script|\son[a-z]+\s*=|javascript:|<foreignObject/i.test(svg)) out.push(issue('error', 'unsafe-svg', at, 'the SVG holds scripts or event handlers; remove them (SVGs are inlined into the page)'));
-      if (/(?:href|src)\s*=\s*["']https?:/i.test(svg) || /@import|url\(\s*["']?https?:/i.test(svg)) out.push(issue('error', 'remote-image', at, 'the SVG loads something from another server'));
+      const { removed } = sanitizeSvg(readFileSync(file, 'utf8'));
+      if (removed.length) out.push(issue('error', 'unsafe-svg', at, `the build would remove from this SVG: ${removed.join('; ')}. Remove them from the file (only plain shapes, text, gradients and #fragment links are kept)`));
     } else if (!['.png', '.jpg', '.jpeg', '.webp', '.avif', '.gif'].includes(ext)) out.push(issue('error', 'image-type', at, `use SVG, PNG, JPEG, WebP or AVIF (got ${ext})`));
     else if (!block.width || !block.height) out.push(issue('warning', 'image-size', at, 'give "width" and "height" so the page does not jump while the image loads'));
   });
@@ -184,14 +244,23 @@ export function toConfirm(lessons) {
   );
 }
 
+/** A course accent must be readable as text on the light backgrounds (the dark one is adjusted automatically). */
+export function lintTheme(course) {
+  const accent = course.theme?.accent;
+  if (!/^#[0-9a-f]{6}$/i.test(accent ?? '')) return [];
+  const tokens = themeTokens(course.theme).light;
+  const ratio = worstContrast(tokens.accent, tokens);
+  return ratio < MIN_CONTRAST ? [issue('warning', 'accent-contrast', 'course.json theme', `accent ${accent} has ${ratio.toFixed(2)}:1 contrast on the page background; links and labels need ${MIN_CONTRAST}:1. Pick a darker colour`)] : [];
+}
+
 export function lintCourse(loaded) {
   const { lessons, glossary, dir, course } = loaded;
   const out = loaded.problems.map((problem) => issue('error', 'shape', problem.where, problem.message));
   const context = { lessons, glossary, dir };
   for (const lesson of lessons) {
-    out.push(...lintSources(lesson), ...lintLength(lesson, course.limits), ...lintQuiz(lesson), ...lintLinks(lesson, context), ...lintFigures(lesson, dir));
+    out.push(...lintSources(lesson), ...lintRestatedClaims(lesson), ...lintLength(lesson, course.limits), ...lintQuiz(lesson), ...lintLinks(lesson, context), ...lintFigures(lesson, dir));
   }
-  out.push(...lintGlossary(lessons, glossary));
+  out.push(...lintGlossary(lessons, glossary), ...lintCourseClaims(lessons, glossary, course), ...lintTheme(course));
   return out;
 }
 

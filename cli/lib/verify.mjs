@@ -17,7 +17,9 @@ export const BUDGETS = {
 
 const issue = (level, rule, where, message) => ({ level, rule, where, message });
 const isExternal = (url) => /^(https?:)?\/\//i.test(url);
-const isSkipped = (url) => /^(mailto:|tel:|data:|javascript:|blob:)/i.test(url);
+const isSkipped = (url) => /^(mailto:|tel:)/i.test(url);
+/** Scheme of a URL as a browser reads it: white space and control characters inside it are ignored. */
+const unsafeScheme = (url) => /^(javascript|vbscript|data|blob|file):/i.test(String(url).replace(/[\s\u0000-\u001f]/g, ''));
 
 /** Where a site-relative link lands on disk, with its fragment. Folders resolve to index.html. */
 export function resolveTarget(dist, fromFile, url) {
@@ -42,7 +44,12 @@ export function checkSiteLinks(dist, pages) {
     for (const token of elements(tokenize(readFileSync(file, 'utf8')))) {
       for (const attribute of ['href', 'src', 'poster']) {
         const url = token.attrs[attribute];
-        if (url === undefined || url === '' || isSkipped(url)) continue;
+        if (url === undefined || url === '') continue;
+        if (unsafeScheme(url)) {
+          out.push(issue('error', 'unsafe-url', where, `<${token.name} ${attribute}="${url.slice(0, 40)}"> uses a script, data or local-file address`));
+          continue;
+        }
+        if (isSkipped(url)) continue;
         if (isExternal(url)) {
           if (token.name !== 'a') out.push(issue('error', 'third-party', where, `<${token.name} ${attribute}="${url}"> loads from another server`));
           continue;
@@ -51,6 +58,10 @@ export function checkSiteLinks(dist, pages) {
         if (!inside) out.push(issue('error', 'outside-site', where, `${url} points outside the site folder`));
         else if (!existsSync(target)) out.push(issue('error', 'broken-link', where, `${url} → missing file ${relative(dist, target)}`));
         else if (hash && target.endsWith('.html') && !idsOf(target).has(decodeURIComponent(hash))) out.push(issue('error', 'broken-anchor', where, `${url} → no element with id "${hash}"`));
+      }
+      // Quiz questions link to their proving sentence from script, by this attribute.
+      if (token.attrs['data-proof'] && /\bq\b/.test(token.attrs.class ?? '') && !idsOf(file).has(token.attrs['data-proof'])) {
+        out.push(issue('error', 'broken-proof', where, `quiz question links to #${token.attrs['data-proof']}, which is not on the page`));
       }
     }
   }
